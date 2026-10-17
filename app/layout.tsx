@@ -4,6 +4,7 @@ import "@fontsource/urbanist/700.css";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import "./studio-polish.css";
+import "./motion-polish.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||

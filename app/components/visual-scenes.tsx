@@ -155,11 +155,7 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
     };
     // Each object lives inside its own DOM box. A fixed canvas above the page
     // cannot obey section stacking or clipping and used to obscure the work.
-    const views = [
-      ...document.querySelectorAll<HTMLElement>(
-        ".base-layer [data-three-scene]",
-      ),
-    ].flatMap((element) => {
+    const makeView = (element: HTMLElement) => {
       const canvas = document.createElement("canvas");
       canvas.className =
         element.dataset.threeScene === "reel" ? "reel-canvas" : "object-canvas";
@@ -178,7 +174,12 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
         canvas.remove();
         return [];
       }
-      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+      renderer.setPixelRatio(
+        Math.min(
+          devicePixelRatio,
+          matchMedia("(pointer: coarse)").matches ? 1.25 : 1.5,
+        ),
+      );
       renderer.setClearColor(0x000000, 0);
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.05;
@@ -204,14 +205,35 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
           generator,
           environmentTarget,
           created: true,
+          smoothProgress: -1,
+          reelProgress: -1,
           width: 0,
           height: 0,
           lost,
           restored,
         },
       ];
-    });
+    };
+    const views: ReturnType<typeof makeView> = [];
+    // Allocate a GPU context only as its artwork approaches the viewport.
+    // This keeps environment generation out of the hero entrance.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || entry.boundingClientRect.width === 0)
+            return;
+          views.push(...makeView(entry.target as HTMLElement));
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "160px 0px" },
+    );
+    document
+      .querySelectorAll<HTMLElement>(".base-layer [data-three-scene]")
+      .forEach((element) => observer.observe(element));
+
     const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const coarse = matchMedia("(pointer: coarse)");
     let reduced = preference.matches;
     const motionChange = () => {
       reduced = preference.matches;
@@ -221,7 +243,9 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
     let last = 0;
     const render = (time: number) => {
       frame = requestAnimationFrame(render);
-      if (document.hidden || time - last < 1000 / 45) return;
+      const interval = coarse.matches ? 1000 / 30 : 1000 / 60;
+      if (document.hidden || time - last < interval - 1) return;
+      const damping = 1 - Math.exp(-Math.min((time - last) / 1000, 0.1) * 9);
       last = time;
       const height = innerHeight;
       views.forEach((view) => {
@@ -238,13 +262,22 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
           ".about-studio,.selected-work,.showreel",
         ) as HTMLElement | null;
         const pr = parent?.getBoundingClientRect();
-        const progress = pr
+        const targetProgress = pr
           ? THREE.MathUtils.clamp(
               (height - pr.top) / (height + pr.height),
               0,
               1,
             )
           : 0;
+        view.smoothProgress =
+          view.smoothProgress < 0 || reduced
+            ? targetProgress
+            : THREE.MathUtils.lerp(
+                view.smoothProgress,
+                targetProgress,
+                damping,
+              );
+        const progress = view.smoothProgress;
         if (view.type === "coffee" && !reduced) {
           view.group.rotation.x = 0.3 + progress * 1.5;
           view.group.rotation.y = -0.5 + progress * 2;
@@ -265,9 +298,14 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
         }
         if (view.type === "reel") {
           const container = view.element.closest(".reel-window") as HTMLElement;
-          const p = parseFloat(
+          const targetReel = parseFloat(
             container?.style.getPropertyValue("--reel-progress") || "0",
           );
+          view.reelProgress =
+            view.reelProgress < 0 || reduced
+              ? targetReel
+              : THREE.MathUtils.lerp(view.reelProgress, targetReel, damping);
+          const p = view.reelProgress;
           view.group.rotation.set(
             p * Math.PI * 2,
             p * Math.PI * 4,
@@ -301,6 +339,7 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
     };
     frame = requestAnimationFrame(render);
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(frame);
       preference.removeEventListener("change", motionChange);
       resources.geometry.forEach((g) => g.dispose());

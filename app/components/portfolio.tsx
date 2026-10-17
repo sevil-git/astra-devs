@@ -10,6 +10,7 @@ import { projects } from "../data/projects";
 const VisualScenes = dynamic(() => import("./visual-scenes"), { ssr: false });
 import Enquiry from "./enquiry";
 import BrandMark from "./brand-mark";
+import { useDialogMotion, useMotionSettings } from "./motion";
 
 const services = [
   {
@@ -300,28 +301,27 @@ function Reel({ mirror = false }: { mirror?: boolean }) {
       >
         {!mirror && <div className="reel-scene" data-three-scene="reel" />}
         <div className="reel-grid" />
-        {!mirror && (
-          <div
-            className="reel-project-preview"
-            key={chapter}
-            aria-hidden="true"
-          >
-            <div className="reel-browser-bar">
-              <span>● ● ●</span>
-              <span>
-                {projects[chapter].name.toLowerCase()}. / live experience
-              </span>
-              <Arrow diagonal />
+        {!mirror &&
+          projects.map((project, index) => (
+            <div
+              className={`reel-project-preview ${chapter === index ? "is-active" : ""}`}
+              key={project.name}
+              aria-hidden="true"
+            >
+              <div className="reel-browser-bar">
+                <span>● ● ●</span>
+                <span>{project.name.toLowerCase()}. / live experience</span>
+                <Arrow diagonal />
+              </div>
+              <img
+                src={project.image}
+                alt=""
+                width="1265"
+                height="712"
+                loading="lazy"
+              />
             </div>
-            <img
-              src={projects[chapter].image}
-              alt=""
-              width="1265"
-              height="712"
-              loading="lazy"
-            />
-          </div>
-        )}
+          ))}
         <div className="reel-caption">
           <span>ASTRA DEVS — SELECTED WORK</span>
           <span>0{chapter + 1} / 03</span>
@@ -332,7 +332,7 @@ function Reel({ mirror = false }: { mirror?: boolean }) {
               ? "A LITTLE LESS TALK."
               : projects[chapter].type.toUpperCase()}
           </span>
-          <div className="reel-title" data-chapter={chapter}>
+          <div className="reel-title" data-chapter={chapter} key={chapter}>
             {mirror ? (
               <>
                 A LOT
@@ -970,7 +970,9 @@ export default function Portfolio() {
   const [openService, setOpenService] = useState<number | null>(null);
   const [activeWork, setActiveWork] = useState(0);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const caseOpen = selectedProject !== null;
+  const [caseOpen, setCaseOpen] = useState(false);
+  const { reduced, fine, compact } = useMotionSettings();
+  const entrancePlayed = useRef(false);
   const [touchReveal, setTouchReveal] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
@@ -1043,20 +1045,31 @@ export default function Portfolio() {
   }, [ready]);
   useEffect(() => {
     if (!entered) return;
-    lenisRef.current?.resize();
-    ScrollTrigger.refresh();
-  }, [openService, activeWork, entered]);
+    const timer = window.setTimeout(
+      () => {
+        lenisRef.current?.resize();
+        ScrollTrigger.refresh();
+      },
+      reduced ? 0 : 600,
+    );
+    return () => clearTimeout(timer);
+  }, [openService, entered, reduced]);
 
   useEffect(() => {
     if (!entered || !rootRef.current) return;
     gsap.registerPlugin(ScrollTrigger);
     const root = rootRef.current;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const maskState = maskRef.current;
+    const maskLayer = root.querySelector<HTMLElement>(".mask-layer");
+    const readingProgress =
+      root.querySelector<HTMLElement>(".reading-progress");
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    const playEntrance = !entrancePlayed.current;
+    entrancePlayed.current = true;
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 1.25,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: !reduced,
+      smoothWheel: fine && !reduced,
       autoRaf: false,
     });
     lenisRef.current = lenis;
@@ -1102,14 +1115,6 @@ export default function Portfolio() {
       cursor.targetX = event.clientX;
       cursor.targetY = event.clientY;
       updateMaskTarget(event.target as Element);
-      root.style.setProperty(
-        "--pointer-x",
-        String(event.clientX / innerWidth - 0.5),
-      );
-      root.style.setProperty(
-        "--pointer-y",
-        String(event.clientY / innerHeight - 0.5),
-      );
     };
     const leave = () => {
       currentKind = "";
@@ -1121,18 +1126,38 @@ export default function Portfolio() {
         });
       }
     };
+    let lastMask = "",
+      lastProgress = "",
+      lastRadius = -1;
     const tick = (time: number, delta: number) => {
       lenis.raf(time * 1000);
       const m = maskRef.current;
-      const alpha = reduced
-        ? 1
-        : 1 - Math.pow(0.001, Math.min(delta / 1000, 0.05));
-      m.x += (m.targetX - m.x) * alpha;
-      m.y += (m.targetY - m.y) * alpha;
-      root.style.setProperty("--mask-x", `${m.x}px`);
-      root.style.setProperty("--mask-y", `${m.y + window.scrollY}px`);
-      root.style.setProperty("--mask-radius", `${m.radius}px`);
-      root.style.setProperty("--reading-progress", String(lenis.progress));
+      if (fine || m.hold || m.radius > 0.01 || lastRadius !== m.radius) {
+        const alpha = reduced
+          ? 1
+          : 1 - Math.pow(0.001, Math.min(delta / 1000, 0.05));
+        m.x += (m.targetX - m.x) * alpha;
+        m.y += (m.targetY - m.y) * alpha;
+        const values = `${m.x.toFixed(2)},${(m.y + window.scrollY).toFixed(2)},${m.radius.toFixed(2)}`;
+        if (values !== lastMask) {
+          maskLayer?.style.setProperty("--mask-x", `${m.x.toFixed(2)}px`);
+          maskLayer?.style.setProperty(
+            "--mask-y",
+            `${(m.y + window.scrollY).toFixed(2)}px`,
+          );
+          maskLayer?.style.setProperty(
+            "--mask-radius",
+            `${m.radius.toFixed(2)}px`,
+          );
+          lastMask = values;
+        }
+        lastRadius = m.radius;
+      }
+      const progress = lenis.progress.toFixed(5);
+      if (progress !== lastProgress) {
+        readingProgress?.style.setProperty("--reading-progress", progress);
+        lastProgress = progress;
+      }
     };
     const anchor = (event: MouseEvent) => {
       const target = (event.target as HTMLElement).closest<HTMLAnchorElement>(
@@ -1145,8 +1170,8 @@ export default function Portfolio() {
       if (!section) return;
       event.preventDefault();
       lenis.scrollTo(section, {
-        duration: reduced ? 0 : 1.1,
-        offset: 0,
+        duration: reduced ? 0 : compact ? 0.8 : 1.15,
+        offset: compact ? -84 : 0,
         onComplete: () => {
           if (!section.hasAttribute("tabindex"))
             section.setAttribute("tabindex", "-1");
@@ -1161,48 +1186,50 @@ export default function Portfolio() {
     document.addEventListener("click", anchor);
     gsap.ticker.add(tick);
     const context = gsap.context(() => {
-      gsap.fromTo(
-        ".hero-name .character",
-        { yPercent: 105 },
-        {
-          yPercent: 0,
-          duration: reduced ? 0 : 0.8,
-          delay: reduced ? 0 : 0.8,
-          stagger: reduced ? 0 : 0.018,
-          ease: "power3.out",
-        },
-      );
-      const darkCharacters = root.querySelectorAll(
-        ".base-layer .hero-heading .character",
-      );
-      const redCharacters = root.querySelectorAll(
-        ".mask-layer .hero-heading .character",
-      );
-      [darkCharacters, redCharacters].forEach((chars) =>
+      if (playEntrance) {
         gsap.fromTo(
-          chars,
-          { yPercent: 115, rotationX: 20 },
+          ".hero-name .character",
+          { yPercent: 105 },
           {
             yPercent: 0,
-            rotationX: 0,
-            duration: reduced ? 0 : 1.4,
-            delay: reduced ? 0 : 0.6,
-            stagger: reduced ? 0 : 0.015,
+            duration: reduced ? 0 : 0.8,
+            delay: reduced ? 0 : 0.8,
+            stagger: reduced ? 0 : 0.018,
             ease: "power3.out",
           },
-        ),
-      );
-      gsap.fromTo(
-        ".base-layer .hero-background",
-        { opacity: 0, scale: 1.4 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: reduced ? 0 : 1.8,
-          delay: reduced ? 0 : 0.3,
-          ease: "power3.inOut",
-        },
-      );
+        );
+        const darkCharacters = root.querySelectorAll(
+          ".base-layer .hero-heading .character",
+        );
+        const redCharacters = root.querySelectorAll(
+          ".mask-layer .hero-heading .character",
+        );
+        [darkCharacters, redCharacters].forEach((chars) =>
+          gsap.fromTo(
+            chars,
+            { yPercent: 115, rotationX: 20 },
+            {
+              yPercent: 0,
+              rotationX: 0,
+              duration: reduced ? 0 : compact ? 1.05 : 1.4,
+              delay: reduced ? 0 : compact ? 0.35 : 0.6,
+              stagger: reduced ? 0 : compact ? 0.012 : 0.015,
+              ease: "power3.out",
+            },
+          ),
+        );
+        gsap.fromTo(
+          ".base-layer .hero-background",
+          { opacity: 0, scale: compact ? 1.06 : 1.14 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: reduced ? 0 : 1.8,
+            delay: reduced ? 0 : 0.3,
+            ease: "power3.inOut",
+          },
+        );
+      }
       root
         .querySelectorAll<HTMLElement>(".base-layer [data-scroll-copy]")
         .forEach((paragraph) => {
@@ -1216,33 +1243,39 @@ export default function Portfolio() {
             { clipPath: "inset(0% 100% 0% 0%)" },
             {
               clipPath: "inset(0% 0% 0% 0%)",
-              stagger: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: paragraph,
-                start: "top 90%",
-                end: "bottom 65%",
-                scrub: true,
-              },
+              duration: compact || !fine ? 0.7 : 1,
+              stagger: compact || !fine ? 0.08 : 1,
+              ease: compact || !fine ? "power3.out" : "none",
+              scrollTrigger:
+                compact || !fine
+                  ? { trigger: paragraph, start: "top 88%", once: true }
+                  : {
+                      trigger: paragraph,
+                      start: "top 90%",
+                      end: "bottom 65%",
+                      scrub: 0.25,
+                    },
             },
           );
         });
       if (!reduced) {
-        root
-          .querySelectorAll<HTMLElement>(".base-layer [data-parallax]")
-          .forEach((media) => {
-            const amount = Number(media.dataset.parallax || 0);
-            gsap.to(media, {
-              y: () => media.parentElement!.offsetHeight * amount,
-              ease: "none",
-              scrollTrigger: {
-                trigger: media.parentElement,
-                start: "top top",
-                end: "bottom top",
-                scrub: true,
-              },
+        if (fine && !compact)
+          root
+            .querySelectorAll<HTMLElement>(".base-layer [data-parallax]")
+            .forEach((media) => {
+              const amount = Number(media.dataset.parallax || 0);
+              gsap.to(media, {
+                y: () => media.parentElement!.offsetHeight * amount,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: media.parentElement,
+                  start: "top top",
+                  end: "bottom top",
+                  scrub: 0.35,
+                  invalidateOnRefresh: true,
+                },
+              });
             });
-          });
         root
           .querySelectorAll<HTMLElement>(".base-layer .full-row")
           .forEach((row) => {
@@ -1252,30 +1285,31 @@ export default function Portfolio() {
               {
                 yPercent: 0,
                 opacity: 1,
-                duration: 0.9,
+                duration: compact ? 0.65 : 0.9,
                 ease: "power3.out",
                 scrollTrigger: { trigger: row, start: "top 96%", once: true },
               },
             );
           });
-        root
-          .querySelectorAll<HTMLElement>(".base-layer [data-reel-section]")
-          .forEach((reel) =>
-            gsap.fromTo(
-              reel.querySelector(".reel-window"),
-              { clipPath: "inset(20%)" },
-              {
-                clipPath: "inset(0%)",
-                ease: "none",
-                scrollTrigger: {
-                  trigger: reel,
-                  start: "top bottom",
-                  end: "center center",
-                  scrub: true,
+        if (fine && !compact)
+          root
+            .querySelectorAll<HTMLElement>(".base-layer [data-reel-section]")
+            .forEach((reel) =>
+              gsap.fromTo(
+                reel.querySelector(".reel-window"),
+                { clipPath: "inset(20%)" },
+                {
+                  clipPath: "inset(0%)",
+                  ease: "none",
+                  scrollTrigger: {
+                    trigger: reel,
+                    start: "top bottom",
+                    end: "center center",
+                    scrub: 0.3,
+                  },
                 },
-              },
-            ),
-          );
+              ),
+            );
       }
       root.querySelectorAll<HTMLElement>("[data-section]").forEach((section) =>
         ScrollTrigger.create({
@@ -1320,27 +1354,50 @@ export default function Portfolio() {
         );
       ScrollTrigger.refresh();
     }, root);
+    let resizeTimer = 0;
+    let viewportWidth = innerWidth,
+      viewportHeight = innerHeight;
     const resize = () => {
-      lenis.resize();
-      ScrollTrigger.refresh();
+      const widthChanged = innerWidth !== viewportWidth;
+      const heightChanged = Math.abs(innerHeight - viewportHeight) > 140;
+      if (!widthChanged && !heightChanged) return;
+      if (
+        !widthChanged &&
+        document.activeElement?.matches("input,textarea,select")
+      )
+        return;
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        viewportWidth = innerWidth;
+        viewportHeight = innerHeight;
+        lenis.resize();
+        ScrollTrigger.refresh();
+      }, 180);
     };
     const popstate = () => {
       const section = document.getElementById(location.hash.slice(1));
       if (section) lenis.scrollTo(section, { immediate: true });
     };
     const focusTimeout = window.setTimeout(
-      () => document.getElementById("main")?.focus({ preventScroll: true }),
+      () => {
+        if (playEntrance)
+          document.getElementById("main")?.focus({ preventScroll: true });
+      },
       reduced ? 0 : 450,
     );
     let disposed = false;
     void document.fonts.ready.then(() => {
-      if (!disposed) resize();
+      if (!disposed) {
+        lenis.resize();
+        ScrollTrigger.refresh();
+      }
     });
     window.addEventListener("resize", resize);
     window.addEventListener("popstate", popstate);
     return () => {
       disposed = true;
       window.clearTimeout(focusTimeout);
+      window.clearTimeout(resizeTimer);
       context.revert();
       lenis.destroy();
       lenisRef.current = null;
@@ -1352,33 +1409,49 @@ export default function Portfolio() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("popstate", popstate);
       radiusTween.current?.kill();
+      maskState.radius = 0;
+      maskLayer?.style.setProperty("--mask-radius", "0px");
     };
-  }, [entered]);
+  }, [entered, reduced, fine, compact]);
 
+  useDialogMotion(caseRef, caseOpen);
   useEffect(() => {
-    if (!caseOpen) return;
+    if (!caseOpen || selectedProject === null) return;
     const dialog = caseRef.current;
-    if (!dialog) return;
-    const previous = document.activeElement as HTMLElement;
-    dialog.showModal();
-    lenisRef.current?.stop();
-    return () => {
-      dialog.close();
-      lenisRef.current?.start();
-      previous?.focus({ preventScroll: true });
-    };
-  }, [caseOpen]);
-  useEffect(() => {
-    if (selectedProject === null) return;
+    const transitions: Animation[] = [];
+    if (dialog && !reduced) {
+      dialog
+        .querySelectorAll(".case-copy,.case-detail-media,.case-art")
+        .forEach((element) => {
+          element.getAnimations().forEach((animation) => animation.cancel());
+          transitions.push(
+            element.animate(
+              [
+                { opacity: 0, transform: "translateY(16px)" },
+                { opacity: 1, transform: "translateY(0)" },
+              ],
+              { duration: 600, easing: "cubic-bezier(.16,1,.3,1)" },
+            ),
+          );
+        });
+    }
     caseRef.current?.scrollTo({ top: 0, behavior: "instant" });
     caseRef.current
       ?.querySelector<HTMLElement>("#case-title")
       ?.focus({ preventScroll: true });
-  }, [selectedProject]);
+    return () => transitions.forEach((animation) => animation.cancel());
+  }, [selectedProject, caseOpen, reduced]);
   useEffect(() => {
-    if (enquiryOpen) lenisRef.current?.stop();
-    else if (selectedProject === null) lenisRef.current?.start();
-  }, [enquiryOpen, selectedProject]);
+    if (enquiryOpen || caseOpen) {
+      lenisRef.current?.stop();
+      return;
+    }
+    const timer = setTimeout(
+      () => lenisRef.current?.start(),
+      reduced ? 0 : 280,
+    );
+    return () => clearTimeout(timer);
+  }, [enquiryOpen, caseOpen, reduced, fine, compact, entered]);
   useEffect(
     () => () => {
       if (holdTimer.current) clearTimeout(holdTimer.current);
@@ -1411,7 +1484,7 @@ export default function Portfolio() {
     };
   }, []);
   const openEnquiry = () => {
-    setSelectedProject(null);
+    setCaseOpen(false);
     setEnquiryOpen(true);
   };
   const reveal = (active: boolean, element?: HTMLElement) => {
@@ -1426,7 +1499,7 @@ export default function Portfolio() {
     radiusTween.current?.kill();
     radiusTween.current = gsap.to(mask, {
       radius: active ? Math.max(innerWidth, innerHeight) * 1.3 : 0,
-      duration: active ? 0.8 : 0.6,
+      duration: reduced ? 0 : active ? 0.8 : 0.45,
       ease: "power3.out",
     });
   };
@@ -1526,7 +1599,10 @@ export default function Portfolio() {
             mirror={false}
             entered={entered}
             activePrinciple={activePrinciple}
-            onProject={setSelectedProject}
+            onProject={(index) => {
+              setSelectedProject(index);
+              setCaseOpen(true);
+            }}
             onEnquiry={openEnquiry}
             openService={openService}
             onService={setOpenService}
@@ -1652,9 +1728,12 @@ export default function Portfolio() {
         className="case-dialog"
         data-lenis-prevent
         ref={caseRef}
-        onCancel={() => setSelectedProject(null)}
+        onCancel={(event) => {
+          event.preventDefault();
+          setCaseOpen(false);
+        }}
         onClick={(e) => {
-          if (e.target === e.currentTarget) setSelectedProject(null);
+          if (e.target === e.currentTarget) setCaseOpen(false);
         }}
         aria-labelledby="case-title"
       >
@@ -1662,7 +1741,7 @@ export default function Portfolio() {
           <>
             <button
               className="dialog-close"
-              onClick={() => setSelectedProject(null)}
+              onClick={() => setCaseOpen(false)}
               aria-label="Close project"
             >
               CLOSE ×

@@ -61,104 +61,124 @@ export default function WorkGallery({
         ))}
       </div>
       <div className="gallery-panels">
-      {projects.map((project, index) => (
-        <div
-          key={project.name}
-          role="tabpanel"
-          className={`gallery-panel ${active === index ? "is-active" : ""}`}
-          inert={active !== index}
-          aria-hidden={active !== index}
-          id={mirror ? undefined : `project-panel-${index}`}
-          aria-labelledby={mirror ? undefined : `project-tab-${index}`}
-        >
-          <button
-            className={`gallery-stage gallery-${project.theme}`}
-            onClick={(event) => {
-              if (performance.now() < suppressClickUntil.current) { event.preventDefault(); return; }
-              onOpen(index);
-            }}
-            onPointerDown={(event) => {
-              if (event.pointerType === "touch") swipe.current = { x: event.clientX, y: event.clientY, time: performance.now() };
-            }}
-            onPointerCancel={() => { swipe.current = null; }}
-            onPointerUp={(event) => {
-              const start = swipe.current;
-              swipe.current = null;
-              if (!start) return;
-              const dx = event.clientX - start.x;
-              const dy = event.clientY - start.y;
-              if (Math.abs(dx) > 48 && Math.abs(dy) < Math.abs(dx) * .65 && performance.now() - start.time < 800) {
-                suppressClickUntil.current = performance.now() + 500;
-                onChange((active + (dx < 0 ? 1 : projects.length - 1)) % projects.length);
-              }
-            }}
-            aria-label={`Explore ${project.name} ${project.type}`}
-            onPointerMove={(event) => {
-              if (
-                event.pointerType === "touch" ||
-                window.matchMedia("(prefers-reduced-motion: reduce)").matches
-              )
-                return;
-              const stage = event.currentTarget;
-              const box = stage.getBoundingClientRect();
-              const x = event.clientX, y = event.clientY;
-              cancelAnimationFrame(tiltFrame.current);
-              tiltFrame.current = requestAnimationFrame(() => {
-              stage.style.setProperty(
-                "--gallery-rx",
-                `${((y - box.top) / box.height - 0.5) * -4}deg`,
-              );
-              stage.style.setProperty(
-                "--gallery-ry",
-                `${((x - box.left) / box.width - 0.5) * 5}deg`,
-              );
-              });
-            }}
-            onPointerLeave={(event) => {
-              cancelAnimationFrame(tiltFrame.current);
-              event.currentTarget.style.setProperty("--gallery-rx", "0deg");
-              event.currentTarget.style.setProperty("--gallery-ry", "0deg");
-            }}
+        {projects.map((project, index) => (
+          <div
+            key={project.name}
+            role="tabpanel"
+            className={`gallery-panel ${active === index ? "is-active" : ""}`}
+            inert={active !== index}
+            aria-hidden={active !== index}
+            id={mirror ? undefined : `project-panel-${index}`}
+            aria-labelledby={mirror ? undefined : `project-tab-${index}`}
           >
-            <span className="gallery-stage-top">
-              <span>SELECTED PROJECT / 0{index + 1}</span>
-              <span>{project.type}</span>
-            </span>
-            <span className="gallery-browser">
-              <span className="gallery-browser-chrome">
-                <span aria-hidden="true">● ● ●</span>
-                <span>{project.name.toLowerCase()} / live experience</span>
-                <span aria-hidden="true">↗</span>
+            <button
+              className={`gallery-stage gallery-${project.theme}`}
+              onClick={(event) => {
+                if (performance.now() < suppressClickUntil.current) {
+                  event.preventDefault();
+                  return;
+                }
+                onOpen(index);
+              }}
+              onPointerDown={(event) => {
+                if (event.pointerType === "touch")
+                  swipe.current = {
+                    x: event.clientX,
+                    y: event.clientY,
+                    time: performance.now(),
+                  };
+              }}
+              onPointerCancel={() => {
+                swipe.current = null;
+              }}
+              onPointerUp={(event) => {
+                const start = swipe.current;
+                swipe.current = null;
+                if (!start) return;
+                const dx = event.clientX - start.x;
+                const dy = event.clientY - start.y;
+                if (
+                  Math.abs(dx) > 48 &&
+                  Math.abs(dy) < Math.abs(dx) * 0.65 &&
+                  performance.now() - start.time < 800
+                ) {
+                  suppressClickUntil.current = performance.now() + 500;
+                  onChange(
+                    (active + (dx < 0 ? 1 : projects.length - 1)) %
+                      projects.length,
+                  );
+                }
+              }}
+              aria-label={`Explore ${project.name} ${project.type}`}
+              onPointerMove={(event) => {
+                if (
+                  event.pointerType === "touch" ||
+                  window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                )
+                  return;
+                const stage = event.currentTarget;
+                const box = stage.getBoundingClientRect();
+                const x = event.clientX,
+                  y = event.clientY;
+                cancelAnimationFrame(tiltFrame.current);
+                tiltFrame.current = requestAnimationFrame(() => {
+                  stage.style.setProperty(
+                    "--gallery-rx",
+                    `${((y - box.top) / box.height - 0.5) * -4}deg`,
+                  );
+                  stage.style.setProperty(
+                    "--gallery-ry",
+                    `${((x - box.left) / box.width - 0.5) * 5}deg`,
+                  );
+                });
+              }}
+              onPointerLeave={(event) => {
+                cancelAnimationFrame(tiltFrame.current);
+                event.currentTarget.style.setProperty("--gallery-rx", "0deg");
+                event.currentTarget.style.setProperty("--gallery-ry", "0deg");
+              }}
+            >
+              <span className="gallery-stage-top">
+                <span>SELECTED PROJECT / 0{index + 1}</span>
+                <span>{project.type}</span>
               </span>
-              <img
-                src={project.image}
-                alt={`${project.name} homepage`}
-                width="1265"
-                height="712"
-                loading="lazy"
-                decoding="async"
-              />
-            </span>
-            <span className="gallery-open" aria-hidden="true">
-              EXPLORE PROJECT <span>↗</span>
-            </span>
-          </button>
-          <div className="gallery-caption">
-            <div>
-              <span className="gallery-caption-type">{project.type}</span>
-              <h2>{project.headline}</h2>
-            </div>
-            <div>
-              <p>{project.description}</p>
-              <button className="line-button" onClick={() => onOpen(index)}>
-                PROJECT DETAILS <span aria-hidden="true">↗</span>
-              </button>
+              <span className="gallery-browser">
+                <span className="gallery-browser-chrome">
+                  <span aria-hidden="true">● ● ●</span>
+                  <span>{project.name.toLowerCase()} / live experience</span>
+                  <span aria-hidden="true">↗</span>
+                </span>
+                <img
+                  src={project.image}
+                  alt={`${project.name} homepage`}
+                  width="1265"
+                  height="712"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span className="gallery-open" aria-hidden="true">
+                EXPLORE PROJECT <span>↗</span>
+              </span>
+            </button>
+            <div className="gallery-caption">
+              <div>
+                <span className="gallery-caption-type">{project.type}</span>
+                <h2>{project.headline}</h2>
+              </div>
+              <div>
+                <p>{project.description}</p>
+                <button className="line-button" onClick={() => onOpen(index)}>
+                  PROJECT DETAILS <span aria-hidden="true">↗</span>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        ))}
       </div>
-      {!mirror && <span className="gallery-swipe-hint">SWIPE TO EXPLORE <span aria-hidden="true">↔</span></span>}
+      <span className="gallery-swipe-hint" aria-hidden={mirror}>
+        SWIPE TO EXPLORE <span aria-hidden="true">↔</span>
+      </span>
     </div>
   );
 }
