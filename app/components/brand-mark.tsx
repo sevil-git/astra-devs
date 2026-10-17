@@ -8,16 +8,18 @@ export default function BrandMark({
   interactive = false,
   active = true,
   intro = false,
+  revealStage = "idle",
 }: {
   className?: string;
   interactive?: boolean;
   active?: boolean;
   intro?: boolean;
+  revealStage?: "idle" | "charging" | "revealed";
 }) {
   const ref = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const mark = ref.current;
-    if (!mark || !interactive || !active) return;
+    if (!mark || !interactive || !active || revealStage !== "idle") return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     const reset = () => {
@@ -61,17 +63,19 @@ export default function BrandMark({
       reduced.removeEventListener("change", reset);
       reset();
     };
-  }, [interactive, active]);
+  }, [interactive, active, revealStage]);
 
   return (
     <span
       ref={ref}
       className={`brand-mark ${intro ? "brand-mark-intro" : ""} ${interactive ? "brand-mark-interactive" : ""} ${className}`}
       aria-hidden="true"
+      data-reveal-phase={revealStage}
       onPointerDown={() => {
         if (
           !interactive ||
           !active ||
+          revealStage !== "idle" ||
           window.matchMedia("(prefers-reduced-motion: reduce)").matches
         )
           return;
@@ -119,6 +123,7 @@ export default function BrandMark({
                 />
               </g>
             </g>
+            <path className="mark-smile" d="M28 40q4 4 8 0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
           </g>
           <path
             className="mark-spark"

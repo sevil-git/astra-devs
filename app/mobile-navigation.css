@@ -1,0 +1,101 @@
+/* Keep the architecture visible behind the fixed navigation at every size. */
+.motion-site > .fixed-header {
+  background: transparent;
+  backdrop-filter: none;
+}
+.intro-screen .intro-enter:focus-visible {
+  outline: none;
+  box-shadow: none;
+  background: #d8cdbb;
+  color: #0d0d0d;
+  border-color: #d8cdbb;
+}
+
+/* The reference's always-visible stacked index, with thumb-sized link areas. */
+@media (max-width: 767.98px) {
+  .fixed-header {
+    height: 0;
+  }
+  .fixed-logo {
+    top: 14px;
+    left: 16px;
+    width: 44px;
+    height: 44px;
+    justify-content: center;
+    align-items: center;
+  }
+  .fixed-navigation {
+    top: 12px;
+    right: 18px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+  }
+  .fixed-navigation .roll-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 100px;
+    min-height: 44px;
+    padding: 0;
+    font: 600 12px/1.1 "Manrope", sans-serif;
+    letter-spacing: .045em;
+    color: #eee7dc9c;
+    text-align: right;
+    text-shadow: 0 1px 10px #0009;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .fixed-navigation .roll-alternate { color: #f4eee5; }
+  .fixed-navigation .roll-link::after { content: none; }
+  .fixed-navigation .roll-link:focus-visible {
+    outline: 1px solid #dd936c;
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  .touch-revealed .fixed-navigation .roll-link,
+  .touch-revealed .fixed-navigation .roll-alternate { color: #38251d; text-shadow: none; }
+}
+.fixed-header, .fixed-footer { transition: opacity .22s ease, visibility 0s; }
+.has-entered.is-footer-index-overlap .fixed-header,
+.has-entered.is-footer-index-overlap .fixed-footer {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .22s ease, visibility 0s .22s;
+}
+
+/* Logo expression shares the hold gesture's actual phase, including cancellation. */
+.brand-mark .mark-smile {
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+.brand-mark[data-reveal-phase="charging"] .mark-body {
+  transform: translateY(1px) rotate(-9deg) scale(.94);
+}
+.brand-mark[data-reveal-phase="charging"] .mark-gaze {
+  transform: translate(1.2px, 1.6px);
+}
+.brand-mark[data-reveal-phase="charging"] .mark-spark {
+  transform: rotate(-40deg) scale(.8);
+}
+.brand-mark[data-reveal-phase="revealed"] .mark-body {
+  transform: translateY(-1px) rotate(8deg) scale(1.08);
+}
+.brand-mark[data-reveal-phase="revealed"] .mark-gaze {
+  transform: translate(0, -.4px);
+}
+.brand-mark[data-reveal-phase="revealed"] .mark-right-eye {
+  animation: none;
+  transform-origin: 35.5px 32.5px;
+  transform: scaleY(.15);
+}
+.brand-mark .mark-right-eye { transition: transform .3s ease; }
+.brand-mark[data-reveal-phase="revealed"] .mark-smile { opacity: 1; }
+.brand-mark[data-reveal-phase="revealed"] .mark-spark {
+  transform: rotate(135deg) scale(1.3);
+  fill: #dd936c;
+}
+.touch-revealed .brand-mark[data-reveal-phase="revealed"] .mark-spark { fill: #38251d; }
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark .mark-smile,
+  .brand-mark .mark-right-eye { transition: none; }
+}

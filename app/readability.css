@@ -1,0 +1,89 @@
+/* Shared type scale for both voices: body 16px, supporting copy 14px,
+   labels 13px. Keep display headings and the reveal geometry intact. */
+.section-label,
+.contact-invitation > .section-label,
+.motto-center > .section-label,
+.enquiry-dialog > .section-label {
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: .1em;
+  color: #c4b59f;
+}
+.intro-brand > span:last-child { font-size: 13px; color: #d8cdbb; }
+.intro-enter,
+.intro-progress { font-size: 14px; }
+.fixed-navigation .roll-link {
+  font-size: 14px;
+  color: #eee7dcc4;
+  text-shadow: 0 1px 2px #000b, 0 0 12px #0008;
+}
+.touch-revealed .fixed-navigation .roll-link { text-shadow: none; }
+.portal-hero .hero-name { font-size: 13px; letter-spacing: .1em; }
+.base-layer .portal-hero .hero-name { text-shadow: 0 1px 8px #000b; }
+.portal-hero .hero-descriptor { opacity: .8; }
+.portal-hero .hero-introduction { font-size: 16px; color: #e5ddd1; line-height: 1.7; }
+.hero-work-link { font-size: 15px; }
+.portal-hero .hero-scroll,
+.hero-reveal-hint,
+.hero-scene-note { font-size: 12px; letter-spacing: .06em; color: #e5dac7; }
+.capability-row .row-reveal-content p,
+.capability-row.is-open .row-reveal-content p,
+.history-content p,
+.work-section-intro,
+.project-description,
+.contact-invitation > p { font-size: 16px; line-height: 1.75; }
+.capability-row .row-reveal-content small,
+.capability-row.is-open .row-reveal-content small { font-size: 14px; opacity: .85; }
+.history-content p { opacity: .9; }
+.history-content > span { font-size: 14px; opacity: .85; }
+.project-chapter-top,
+.project-tags { font-size: 13px; line-height: 1.6; color: #c4b59f; }
+.project-stage-caption { font-size: 12px; line-height: 1.5; letter-spacing: .03em; }
+.project-film-control { font-size: 13px; }
+.project-visit { font-size: 15px; }
+.principle-signature { font-size: 13px; line-height: 1.6; }
+.principle-signature span { font-size: 16px; line-height: 1.7; color: #c4b59f; }
+.motto-center > p:last-child { font-size: 14px; }
+.contact-detail-label { font-size: 14px; color: #c4b59f; }
+.connect-links .roll-link { font-size: 16px; }
+.end-credit { font-size: 12px; opacity: .85; flex-wrap: wrap; }
+.sound-toggle { font-size: 13px; }
+.sound-toggle > span:not(.selected) { opacity: .7; }
+.dialog-close { font-size: 13px; min-height: 44px; }
+.enquiry-dialog .dialog-close { margin: 0 0 24px auto; }
+.enquiry-dialog > .section-label { margin-top: 0; }
+.enquiry-dialog label { font-size: 15px; }
+.enquiry-dialog .enquiry-intro,
+.enquiry-dialog input,
+.enquiry-dialog select,
+.enquiry-dialog textarea { font-size: 16px; }
+.enquiry-dialog input::placeholder,
+.enquiry-dialog textarea::placeholder { color: #bfb19d; }
+.enquiry-dialog .form-note { font-size: 14px; opacity: .85; line-height: 1.75; }
+.brief-preview { font-size: 15px; }
+.line-button,
+.solid-button { font-size: 14px; letter-spacing: .04em; }
+
+/* Strong ink on copper, including labels that have more specific selectors. */
+.mask-layer .section-label,
+.mask-layer .contact-invitation > .section-label,
+.mask-layer .motto-center > .section-label,
+.mask-layer .principle-signature span,
+.mask-layer .contact-detail-label { color: #38251d; }
+
+@media (min-width: 768px) {
+  .capability-row .row-button > .copy-container { min-height: 210px; }
+}
+
+@media (max-width: 767.98px) {
+  .portal-hero .hero-name { font-size: 12px; margin-bottom: 18px; }
+  .portal-hero .hero-introduction { font-size: 15px; margin-top: 18px; }
+  .hero-work-link { margin-top: 20px; }
+  .capability-row.is-open .row-button > .copy-container { min-height: 330px; }
+  .capability-row .row-reveal-content { flex-direction: column; justify-content: center; align-items: flex-start; padding: 24px 0; }
+  .capability-row .row-reveal-content h2 { max-width: 100%; }
+  .project-stage-caption { max-width: calc(100% - 68px); left: 12px; bottom: 14px; }
+  .project-tags { gap: 10px 16px; }
+  .contact-email { font-size: 20px; overflow-wrap: anywhere; }
+  .end-credit { gap: 12px; line-height: 1.8; }
+}

@@ -196,6 +196,7 @@ function RollLink({
     <a
       className={`roll-link ${active ? "is-active" : ""}`}
       href={href}
+      aria-current={active ? "location" : undefined}
       onClick={onClick}
     >
       {content}
@@ -446,6 +447,7 @@ function PageLayer({
                 {principles.map((principle, index) => (
                   <article
                     className="principle"
+                    id={!mirror ? `principle-${index + 1}` : undefined}
                     data-principle={!mirror ? index : undefined}
                     key={principle.label}
                   >
@@ -475,28 +477,18 @@ function PageLayer({
                   ▸
                 </span>
                 {principles.map((p, i) => (
-                  <button
+                  <a
                     className={`principle-thumb thumb-${i} ${activePrinciple === i ? "is-active" : ""}`}
                     key={p.label}
-                    onClick={() =>
-                      document
-                        .querySelector(`[data-principle="${i}"]`)
-                        ?.scrollIntoView({
-                          behavior: matchMedia(
-                            "(prefers-reduced-motion: reduce)",
-                          ).matches
-                            ? "instant"
-                            : "smooth",
-                          block: "center",
-                        })
-                    }
+                    href={`#principle-${i + 1}`}
+                    tabIndex={mirror ? -1 : undefined}
                     aria-label={p.label}
-                    aria-pressed={activePrinciple === i}
+                    aria-current={activePrinciple === i ? "step" : undefined}
                   >
                     <span>
                       <span className="principle-index">0{i + 1}</span>
                     </span>
-                  </button>
+                  </a>
                 ))}
               </aside>
             </div>
@@ -635,10 +627,11 @@ export default function Portfolio() {
   const [soundOn, setSoundOn] = useState(false);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [openService, setOpenService] = useState<number | null>(null);
-  const { reduced, fine, compact } = useMotionSettings();
+  const { reduced, fine, compact, shortLandscape } = useMotionSettings();
   const entrancePlayed = useRef(false);
   const journeyRef = useRef(0);
   const [touchReveal, setTouchReveal] = useState(false);
+  const [holdStage, setHoldStage] = useState<HoldStage>("idle");
   const rootRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
   const startRef = useRef<HTMLButtonElement>(null);
@@ -706,6 +699,34 @@ export default function Portfolio() {
     if (ready) startRef.current?.focus({ preventScroll: true });
   }, [ready]);
   useEffect(() => {
+    const root = rootRef.current;
+    if (!entered || !compact || !root) return;
+    // The footer has its own index. Hide floating chrome only while it would
+    // cross those links, rather than drawing two menus on top of each other.
+    const targets = root.querySelectorAll(".base-layer .connect-grid,.base-layer .end-credit");
+    const visible = new Set<Element>();
+    let observer: IntersectionObserver;
+    const observe = () => {
+      observer?.disconnect();
+      visible.clear();
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
+        });
+        root.classList.toggle("is-footer-index-overlap", visible.size > 0);
+      }, { rootMargin: `0px 0px -${Math.max(0, innerHeight - 160)}px 0px` });
+      targets.forEach((target) => observer.observe(target));
+    };
+    observe();
+    window.addEventListener("resize", observe);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", observe);
+      root.classList.remove("is-footer-index-overlap");
+    };
+  }, [entered, compact]);
+  useEffect(() => {
     if (!entered) return;
     const timer = window.setTimeout(
       () => {
@@ -729,9 +750,10 @@ export default function Portfolio() {
     const playEntrance = !entrancePlayed.current;
     entrancePlayed.current = true;
     const lenis = new Lenis({
-      duration: 1.25,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: fine && !reduced,
+      lerp: 0.085,
+      wheelMultiplier: 0.9,
+      smoothWheel: !reduced,
+      syncTouch: false,
       autoRaf: false,
     });
     lenisRef.current = lenis;
@@ -743,7 +765,7 @@ export default function Portfolio() {
           : Math.max(8, (innerWidth * 20) / 1728);
     let currentKind = "";
     const updateMaskTarget = (target: Element | null) => {
-      if (!fine || maskRef.current.hold || !target) return;
+      if (!fine || compact || maskRef.current.hold || !target) return;
       const kind = target.closest(
         "a,button,input,textarea,select,dialog,[data-mask='hide']",
       )
@@ -767,7 +789,7 @@ export default function Portfolio() {
         updateMaskTarget(document.elementFromPoint(mask.targetX, mask.targetY));
     });
     const move = (event: PointerEvent) => {
-      if (!fine || event.pointerType === "touch" || maskRef.current.hold)
+      if (!fine || compact || event.pointerType === "touch" || maskRef.current.hold)
         return;
       const cursor = maskRef.current;
       if (cursor.targetX === -1000) {
@@ -794,7 +816,7 @@ export default function Portfolio() {
     const tick = (time: number, delta: number) => {
       lenis.raf(time * 1000);
       const m = maskRef.current;
-      if (fine || m.hold || m.radius > 0.01 || lastRadius !== m.radius) {
+      if ((fine && !compact) || m.hold || m.radius > 0.01 || lastRadius !== m.radius) {
         const alpha = reduced
           ? 1
           : 1 - Math.pow(0.001, Math.min(delta / 1000, 0.05));
@@ -833,7 +855,9 @@ export default function Portfolio() {
       event.preventDefault();
       lenis.scrollTo(section, {
         duration: reduced ? 0 : compact ? 0.8 : 1.15,
-        offset: 0,
+        offset: section.hasAttribute("data-principle")
+          ? -Math.max(0, (innerHeight - section.offsetHeight) / 2)
+          : 0,
         onComplete: () => {
           if (!section.hasAttribute("tabindex"))
             section.setAttribute("tabindex", "-1");
@@ -894,7 +918,7 @@ export default function Portfolio() {
     };
     const context = gsap.context(() => {
       const stage = journeys[0];
-      if (!reduced && stage && hero) {
+      if (!reduced && !shortLandscape && stage && hero) {
         gsap.to(playhead, {
           value: 1,
           ease: "none",
@@ -903,7 +927,7 @@ export default function Portfolio() {
             trigger: stage,
             start: "top top",
             end: "bottom bottom",
-            scrub: compact ? 0.3 : 0.55,
+            scrub: compact ? 0.2 : 0.3,
             invalidateOnRefresh: true,
           },
         });
@@ -962,7 +986,7 @@ export default function Portfolio() {
             return;
           }
           const studioStage = paragraph.closest(".studio-intro-stage");
-          if (studioStage) {
+          if (studioStage && !shortLandscape) {
             gsap.set(lines, { clipPath: "inset(0% 100% 0% 0%)" });
             gsap.to(lines, {
               clipPath: "inset(0% 0% 0% 0%)",
@@ -1185,7 +1209,7 @@ export default function Portfolio() {
       maskState.targetY = -1000;
       maskLayer?.style.setProperty("--mask-radius", "0px");
     };
-  }, [entered, reduced, fine, compact]);
+  }, [entered, reduced, fine, compact, shortLandscape]);
 
   useEffect(() => {
     if (enquiryOpen) {
@@ -1207,6 +1231,7 @@ export default function Portfolio() {
   );
   const openEnquiry = () => { setEnquiryOpen(true); };
   const changeHoldStage = useCallback((stage: HoldStage, button: HTMLButtonElement) => {
+    setHoldStage(stage);
     const mask = maskRef.current;
     radiusTween.current?.kill();
     if (stage === "idle") {
@@ -1310,7 +1335,7 @@ export default function Portfolio() {
       </div>
       <header className="fixed-header" inert={!entered}>
         <a className="fixed-logo" href="#about" aria-label="Astra devs home">
-          <BrandMark interactive active={entered} />
+          <BrandMark interactive active={entered} revealStage={holdStage} />
           <span className="header-wordmark" aria-hidden="true">
             astra devs
           </span>

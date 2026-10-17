@@ -7,23 +7,26 @@ export function useMotionSettings() {
     reduced: false,
     fine: false,
     compact: false,
+    shortLandscape: false,
   });
   useEffect(() => {
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     const fine = matchMedia("(hover: hover) and (pointer: fine)");
-    const compact = matchMedia("(max-width: 767.98px)");
+    const compact = matchMedia("(max-width: 767.98px), (max-width: 1024px) and (max-height: 480px) and (orientation: landscape)");
+    const shortLandscape = matchMedia("(max-width: 1024px) and (max-height: 480px) and (orientation: landscape)");
     const update = () =>
       setSettings({
         reduced: reduced.matches,
         fine: fine.matches,
         compact: compact.matches,
+        shortLandscape: shortLandscape.matches,
       });
     update();
-    [reduced, fine, compact].forEach((query) =>
+    [reduced, fine, compact, shortLandscape].forEach((query) =>
       query.addEventListener("change", update),
     );
     return () =>
-      [reduced, fine, compact].forEach((query) =>
+      [reduced, fine, compact, shortLandscape].forEach((query) =>
         query.removeEventListener("change", update),
       );
   }, []);

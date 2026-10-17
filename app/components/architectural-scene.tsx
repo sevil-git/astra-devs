@@ -12,8 +12,6 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
   const hostRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const activeRef = useRef(active);
-  const pausedRef = useRef(false);
-  const [paused, setPaused] = useState(false);
   const [available, setAvailable] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [imageReady, setImageReady] = useState(false);
@@ -77,6 +75,8 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       uImage: { value: null as THREE.Texture | null },
       uOcean: { value: null as THREE.Texture | null },
       uAperture: { value: null as THREE.Texture | null },
+      uWaterMask: { value: null as THREE.Texture | null },
+      uWaterReady: { value: 0 },
       uApertureReady: { value: 0 },
       uOceanReady: { value: 0 },
       uCover: { value: new THREE.Vector2(1, 1) },
@@ -88,6 +88,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       uPointer: { value: new THREE.Vector2() },
       uTime: { value: 0 },
       uWaterline: { value: 0.34 },
+      uSeaHorizon: { value: .489 },
     };
     const material = new THREE.ShaderMaterial({
       uniforms,
@@ -97,6 +98,8 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
         uniform sampler2D uImage;
         uniform sampler2D uOcean;
         uniform sampler2D uAperture;
+        uniform sampler2D uWaterMask;
+        uniform float uWaterReady;
         uniform float uApertureReady;
         uniform float uOceanReady;
         uniform vec2 uCover;
@@ -108,7 +111,56 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
         uniform vec2 uPointer;
         uniform float uTime;
         uniform float uWaterline;
+        uniform float uSeaHorizon;
         varying vec2 vUv;
+
+        // A small directional wave spectrum on a perspective-projected plane.
+        // Incommensurate wavelengths avoid a repeating, screen-space sine wobble.
+        vec3 waves(vec2 p, float t) {
+          vec3 w = vec3(0.0);
+          vec2 a = vec2(.94, .34);
+          vec2 b = vec2(-.86, .51);
+          vec2 c = vec2(.22, .98);
+          float p0 = dot(p, a) * 2.7 - t * .83;
+          float p1 = dot(p, b) * 4.3 - t * 1.12;
+          float p2 = dot(p, c) * 7.7 - t * 1.52;
+          float p3 = dot(p, vec2(.77, -.64)) * 12.1 - t * 1.93;
+          w.xy = a * cos(p0) * .46 + b * cos(p1) * .27
+            + c * cos(p2) * .17 + vec2(.77, -.64) * cos(p3) * .10;
+          w.z = sin(p0) * .46 + sin(p1) * .27 + sin(p2) * .17 + sin(p3) * .10;
+          return w;
+        }
+
+        vec3 waterMotion(vec2 uv, float horizon, float extent, float scale, float speed) {
+          float depth = clamp((horizon - uv.y) / extent, 0.0, 1.0);
+          // Wavelengths compress toward the shore instead of scaling with the screen.
+          float perspective = 1.0 / (.24 + depth * 1.7);
+          vec2 plane = vec2((uv.x - .5) * perspective * 8.0, perspective * 3.0);
+          vec3 surface = waves(plane, uTime * speed);
+          float distanceFade = smoothstep(0.0, .12, depth) * (.24 + .76 * depth);
+          return vec3(surface.xy * vec2(.018, .008) * scale * distanceFade,
+            surface.z * .10 * distanceFade);
+        }
+
+        vec4 animateRoom(vec2 uv) {
+          vec2 masks = texture2D(uWaterMask, uv).rg * uWaterReady;
+          vec4 original = texture2D(uImage, uv);
+          if (max(masks.r, masks.g) < .001) return original;
+          vec3 pool = vec3(0.0);
+          vec3 distant = vec3(0.0);
+          if (masks.r > .001) pool = waterMotion(uv, uWaterline, uWaterline, 1.0, 1.35);
+          if (masks.g > .001) distant = waterMotion(uv, uSeaHorizon, .10, .35, 1.0);
+          vec3 motion = pool * masks.r + distant * masks.g;
+          vec2 warped = uv + motion.xy;
+          // A second matte lookup prevents displaced stone from entering the water.
+          vec2 safe = texture2D(uWaterMask, warped).rg * uWaterReady;
+          float coverage = min(dot(masks, vec2(1.0)), dot(safe, vec2(1.0)));
+          vec4 flowing = texture2D(uImage, warped);
+          // Modulate existing reflection light; never paint synthetic white ripples.
+          flowing.rgb *= 1.0 + motion.z;
+          return mix(original, flowing, coverage);
+        }
+
         void main() {
           float travel = smoothstep(.04, .79, uJourney);
           float align = smoothstep(.02, .56, uJourney);
@@ -119,27 +171,27 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
           vec2 centre = mix(vec2(.5), uPortal.xy, align);
           vec2 roomUv = (vUv - .5) * uCover / nearScale + centre;
           roomUv += uPointer * .004 * uCover * (1.0 - travel);
-          vec2 uv = roomUv;
-          // Only the foreground pool moves; the architectural edges stay still.
-          float water = 1.0 - smoothstep(uWaterline - .05, uWaterline, uv.y);
-          float shore = smoothstep(.02, .12, uv.x) * (1.0 - smoothstep(.82, .9, uv.x));
-          uv.x += sin(uv.y * 190.0 + uTime * .55) * .0011 * water * shore;
-          uv.y += sin(uv.x * 31.0 + uv.y * 95.0 - uTime * .4) * .00055 * water * shore;
-          vec4 room = texture2D(uImage, uv);
+          vec4 room = animateRoom(roomUv);
           // Each authored matte follows the actual inner stone edge and sill.
           float aperture = texture2D(uAperture, roomUv).r * uApertureReady;
-          float farScale = 1.0 + travel * .24;
-          // Register the sun while exchanging plates, then let the far view drift
-          // independently. This avoids a double sun during the depth dissolve.
-          vec2 registeredCentre = vec2(.753, .566) - (uSun - centre) * nearScale / uCover * uOceanCover / farScale;
-          vec2 seaCentre = mix(registeredCentre, uOceanCentre, smoothstep(.18, .62, uJourney));
-          vec2 seaUv = (vUv - .5) * uOceanCover / farScale + seaCentre;
-          float seaWater = 1.0 - smoothstep(.44, .48, seaUv.y);
-          seaUv.x += sin(seaUv.y * 160.0 + uTime * .65) * .0006 * seaWater;
-          seaUv.y += sin(seaUv.x * 46.0 - uTime * .4) * .0003 * seaWater;
-          vec4 sea = texture2D(uOcean, clamp(seaUv, .001, .999));
           float reveal = aperture * smoothstep(.05, .18, uJourney) * uOceanReady;
-          gl_FragColor = mix(room, sea, reveal);
+          vec4 colour = room;
+          if (reveal > .001) {
+            float farScale = 1.0 + travel * .24;
+            // Register the sun while exchanging plates, then let the far view drift
+            // independently. This avoids a double sun during the depth dissolve.
+            vec2 registeredCentre = vec2(.753, .566) - (uSun - centre) * nearScale / uCover * uOceanCover / farScale;
+            vec2 seaCentre = mix(registeredCentre, uOceanCentre, smoothstep(.18, .62, uJourney));
+            vec2 seaUv = (vUv - .5) * uOceanCover / farScale + seaCentre;
+            float seaWater = 1.0 - smoothstep(.44, .466, seaUv.y);
+            vec3 seaMotion = vec3(0.0);
+            if (seaWater > .001) seaMotion = waterMotion(seaUv, .466, .466, .65, 1.15);
+            seaUv += seaMotion.xy * seaWater;
+            vec4 sea = texture2D(uOcean, clamp(seaUv, .001, .999));
+            sea.rgb *= 1.0 + seaMotion.z * seaWater * .6;
+            colour = mix(room, sea, reveal);
+          }
+          gl_FragColor = colour;
           #include <colorspace_fragment>
         }`,
     });
@@ -157,6 +209,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
     let texture: THREE.Texture | null = null;
     let seaTexture: THREE.Texture | null = null;
     let apertureTexture: THREE.Texture | null = null;
+    let waterTexture: THREE.Texture | null = null;
     let lastJourney = -1;
     const pointer = new THREE.Vector2();
     const aim = new THREE.Vector2();
@@ -192,6 +245,22 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
     const load = () => {
       const version = ++request;
       uniforms.uApertureReady.value = 0;
+      uniforms.uWaterReady.value = 0;
+      new THREE.TextureLoader().load(
+        compact.matches ? "/images/threshold/water-mobile.svg" : "/images/threshold/water-desktop.svg",
+        (next) => {
+          if (disposed || version !== request) { next.dispose(); return; }
+          next.minFilter = THREE.LinearFilter;
+          next.generateMipmaps = false;
+          waterTexture?.dispose();
+          waterTexture = next;
+          uniforms.uWaterMask.value = next;
+          uniforms.uWaterReady.value = 1;
+          dirty = true;
+        },
+        undefined,
+        () => { /* Keep the original water if its protective matte cannot load. */ },
+      );
       new THREE.TextureLoader().load(
         compact.matches ? "/images/threshold/aperture-mobile.svg" : "/images/threshold/aperture-desktop.svg",
         (next) => {
@@ -221,6 +290,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
           texture = next;
           uniforms.uImage.value = next;
           uniforms.uWaterline.value = compact.matches ? 0.49 : 0.34;
+          uniforms.uSeaHorizon.value = compact.matches ? .591 : .489;
           if (compact.matches) uniforms.uPortal.value.set(.524, .696);
           else uniforms.uPortal.value.set(.716, .653);
           uniforms.uSun.value.set(compact.matches ? .699 : .814, compact.matches ? .647 : .586);
@@ -261,8 +331,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       if (now - last < interval - 1 && !dirty) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (pausedRef.current && !dirty) return;
-      if (!pausedRef.current && activeRef.current) {
+      if (activeRef.current) {
         time += dt;
         pointer.lerp(aim, 1 - Math.exp(-dt * 2.5));
       }
@@ -274,7 +343,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       dirty = false;
     };
     const move = (event: PointerEvent) => {
-      if (!activeRef.current || !fine.matches || pausedRef.current || !visible) return;
+      if (!activeRef.current || !fine.matches || !visible) return;
       aim.set(
         (event.clientX / innerWidth - 0.5) * 2,
         (event.clientY / innerHeight - 0.5) * 2,
@@ -312,6 +381,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       texture?.dispose();
       seaTexture?.dispose();
       apertureTexture?.dispose();
+      waterTexture?.dispose();
       material.dispose();
       geometry.dispose();
       renderer.dispose();
@@ -342,20 +412,6 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
         <div className="portal-shade" />
         <div className="portal-finish" />
       </div>
-      {active && available && !reduced && (
-        <button
-          className="background-motion-toggle"
-          aria-label={paused ? "Resume ambient motion" : "Pause ambient motion"}
-          aria-pressed={!paused}
-          onClick={() => {
-            pausedRef.current = !pausedRef.current;
-            setPaused(pausedRef.current);
-          }}
-        >
-          <span aria-hidden="true">{paused ? "▶" : "Ⅱ"}</span> MOTION{" "}
-          {paused ? "OFF" : "ON"}
-        </button>
-      )}
     </>
   );
 }

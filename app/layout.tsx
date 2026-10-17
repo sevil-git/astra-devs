@@ -14,6 +14,8 @@ import "./architectural-scene.css";
 import "./studio-direction.css";
 import "./hold-reveal.css";
 import "./portal-journey.css";
+import "./mobile-navigation.css";
+import "./readability.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||

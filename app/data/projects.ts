@@ -4,12 +4,12 @@ export const projects = [
     type: "E-commerce experience",
     headline: "Hydration. With a splash of drama.",
     description:
-      "A vivid digital storefront for an electrolyte drink brand. Product storytelling, flavour discovery, and shopping come together in one expressive experience.",
+      "An interactive drinks storefront. Hydration, with a splash of drama.",
     secret: "A website for staying hydrated. Built on suspicious amounts of coffee.",
     tags: "E-commerce · Product storytelling · Interactive website",
     image: "/images/projects/zeltic.png",
-    film: "/videos/projects/zeltic-desktop.mp4",
-    poster: "/images/projects/zeltic-film.webp",
+    film: "/videos/projects/zeltic-cursor-cinematic.mp4",
+    poster: "/images/projects/zeltic-cursor-cinematic.webp",
     detailImage: "/images/projects/zeltic-detail.png",
     detailCaption:
       "Flavour, colour, and product storytelling in one visual language.",
@@ -36,7 +36,7 @@ export const projects = [
     type: "Music education platform",
     headline: "Great teachers. Fewer wrong notes.",
     description:
-      "A home for finding the right music teacher. Explore instruments, discover teachers, and find online or in-person lessons around your goals and location.",
+      "Find your music teacher. Fewer wrong notes along the way.",
     secret: "Your neighbours are rooting for this one.",
     tags: "Web platform · Teacher discovery · Music education",
     image: "/images/projects/maestera.png",
@@ -68,7 +68,7 @@ export const projects = [
     type: "Interactive 3D website",
     headline: "A very good reason to keep typing.",
     description:
-      "An immersive product experience for Nimbus keyboards. Explore the Vapor75 in 3D, try switch options, and change keycap styles in an interactive playground.",
+      "A 3D keyboard playground. Go on, press a few buttons.",
     secret: "Yes, we made a keyboard worth staring at.",
     tags: "3D product experience · Interactive customisation · Creative development",
     image: "/images/projects/nimbus.png",

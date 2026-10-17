@@ -52,9 +52,6 @@
   text-transform: uppercase;
   color: #b8ab97;
 }
-.project-chapter-top > :last-child {
-  opacity: 0.45;
-}
 .project-composition {
   display: grid;
   grid-template-columns: minmax(0, 1.65fr) minmax(270px, 1fr);
@@ -174,19 +171,6 @@
   letter-spacing: -0.055em;
   line-height: 1;
 }
-.project-title a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-.project-title a > span {
-  font:
-    24px/1 "Manrope",
-    sans-serif;
-  opacity: 0.5;
-  transition: transform 0.5s var(--motion-out);
-}
 .project-headline {
   margin-top: 22px;
   font:
@@ -254,7 +238,6 @@
     background: #ffffff30;
     transform: translate(2px, -2px);
   }
-  .project-title a:hover > span,
   .project-visit:hover > span {
     transform: translate(3px, -3px);
   }
@@ -323,9 +306,6 @@
     font-size: 8px;
     margin-bottom: 20px;
     letter-spacing: 0.07em;
-  }
-  .project-chapter-top > :last-child {
-    display: none;
   }
   .project-composition {
     display: flex;

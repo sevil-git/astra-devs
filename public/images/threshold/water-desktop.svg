@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941">
+  <defs><filter id="edge"><feGaussianBlur stdDeviation="3"/></filter></defs>
+  <path fill="#000" d="M0 0h1672v941H0z"/>
+  <!-- Red: foreground reflection plane, excluding the steps and right stone pier. -->
+  <path fill="#f00" filter="url(#edge)" d="M-20 630L670 622V645L1304 651L1313 644L1455 646L1446 744L1692 827V961H-20Z"/>
+  <!-- Green: distant sea inside the opening; the mountain silhouette stays fixed. -->
+  <path fill="#0f0" filter="url(#edge)" d="M960 487H1406C1380 516 1352 538 1320 550H1029C1002 532 978 509 960 487Z"/>
+</svg>

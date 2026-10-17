@@ -81,6 +81,15 @@
   }
   .portal-journey .portal-artwork { transform-origin: 52.5% 30.5%; }
 }
+/* Keep the primary action above the fixed hold control on shorter phones. */
+@media (max-width: 767.98px) and (min-height: 481px) and (max-height: 700px) {
+  .about-sequence { --portal-height: 100svh; }
+  .portal-journey .portal-hero .hero-center {
+    top: max(148px, calc(100svh - 430px));
+    bottom: calc(130px + env(safe-area-inset-bottom, 0px));
+  }
+  .portal-hero .hero-heading { font-size: clamp(38px, 10.6vw, 48px); }
+}
 @media (prefers-reduced-motion: reduce) {
   .portal-journey { height: auto; }
   .portal-journey .portal-hero { position: relative; }
@@ -94,4 +103,35 @@
     height: auto;
     opacity: 1;
   }
+}
+/* A short landscape viewport cannot contain a pinned cinematic chapter.
+   Use a normal scroll layout so the main action remains reachable. */
+@media (max-width: 1024px) and (max-height: 480px) and (orientation: landscape) {
+  .portal-journey { height: auto; }
+  .portal-journey .portal-hero { position: relative; height: 600px; }
+  .portal-journey .portal-hero .hero-center {
+    position: absolute; top: 150px; bottom: 100px; width: 100%;
+    margin: 0; padding: 0 24px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+  }
+  .portal-hero .hero-name { justify-content: center; margin-bottom: 18px; }
+  .portal-hero .hero-descriptor { display: none; }
+  .portal-hero .hero-heading { font-size: 48px; }
+  .portal-blackout { display: none; }
+  .about-sequence .about-studio { margin-top: 0; }
+  .about-sequence #studio { scroll-margin-top: 0; }
+  .studio-intro-stage { height: auto; background: none; }
+  .studio-intro-stage .about-intro { position: relative; height: auto; opacity: 1; padding: 100px 0; }
+  .touch-hold { left: auto; right: 16px; width: 68px; height: 68px; transform: none; bottom: 14px; }
+  .touch-hold .hold-core { inset: 18px; }
+  .portal-hero .hero-scroll, .hero-reveal-hint, .hero-scene-note { display: none; }
+  .footer-shortcuts { display: none; }
+  .sound-toggle {
+    left: 16px; bottom: 14px; right: auto; top: auto;
+    transform: none; writing-mode: horizontal-tb;
+    width: 44px; height: 44px; min-height: 44px; padding: 0;
+    display: grid; place-items: center; border: 0; background: none;
+  }
+  .sound-toggle > span { display: none; }
+  .sound-toggle .sound-bars { transform: none; margin: 0; width: 16px; height: 16px; }
 }

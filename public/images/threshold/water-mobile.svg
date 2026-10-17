@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1601" viewBox="0 0 900 1601">
+  <defs><filter id="edge"><feGaussianBlur stdDeviation="3"/></filter></defs>
+  <path fill="#000" d="M0 0h900v1601H0z"/>
+  <path fill="#f00" filter="url(#edge)" d="M-20 815H36V837H805V815H920V1621H-20Z"/>
+  <path fill="#0f0" filter="url(#edge)" d="M241 663H677C659 692 635 717 602 739H276C262 716 250 690 241 663Z"/>
+</svg>

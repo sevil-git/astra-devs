@@ -196,3 +196,83 @@ The old mount-time background animation is replaced by an Enter-triggered 1.6s o
 Browser checks at 1280 × 800 and 390 × 720 found the decoded image and prepared canvas behind the entry screen at opacity 0. After Enter, observed opacity progressed through approximately 0.014 at 200ms, 0.134 at 400ms, 0.435 at 600ms, 0.704 at 800ms, 0.938 at 1.2s, and 1 by 1.8s. Image/canvas widths stayed equal and transforms remained none. The checked browser error log is empty. These are local-browser measurements; physical-device performance and throttled remote networks were not measured. Temporary instrumentation removed.
 
 Final validation: production build and TypeScript passed. ESLint reports zero errors and the same two native-image advisories. The Next.js feedback reporting pass retained no qualifying framework issues.
+
+## Mobile navigation and interaction polish — October 17, 2026
+
+Adapted the reference's always-visible vertical mobile menu with rolling labels, an active section state, and 100 × 44px touch targets. The Astra logo now compresses as the hold charges, then tilts, winks, smiles, and turns its spark when the alternate view opens. Release restores its normal expression. The floating caption above the hold circle has been removed; circular instructions, screen-reader guidance, and the gesture remain.
+
+Removed the orange Start focus ring while retaining a visible ivory filled keyboard focus state. The fixed header is transparent without backdrop blur in both normal and revealed modes. Wheel scrolling now uses Lenis interpolation with modest wheel damping, while touch retains native inertia. Reduced motion disables smooth-wheel animation. Reduced the portal's additional scrub delay to avoid compounded lag.
+
+Browser checks at 390 × 720 and 320 × 720 confirmed no caption, 44px menu targets, and no horizontal overflow. Work and Contact links landed correctly and updated aria-current. Actual pointer holds recorded charging → revealed after approximately 533–566ms → idle on release; a 120ms tap returned idle without revealing. The revealed logo's smile reached opacity 1 and the header's computed backdrop filter was none with a transparent background. Physical-device frame rates were not measured.
+
+Production build and TypeScript passed. ESLint has zero errors and the same two existing native-image advisories. Temporary responsive instrumentation was removed. Next.js feedback reporting pass: no qualifying framework issues retained.
+
+## Readable supporting typography — October 17, 2026
+
+A runtime audit found desktop labels at 7–11px and mobile controls at 6px. Added a consistent final typography scale: 16px descriptions and body copy, 14–15px supporting text and actions, and 12–13px small labels. Increased muted copy contrast, retained dark ink on the alternate copper layer, and added navigation text shadows over bright artwork without reintroducing a header background or blur. Display headings remain unchanged.
+
+Project categories, tags, film captions, process descriptions, principle captions, contact labels, footer credits, the loading screen, and enquiry controls are all larger. Shortened the film caption and circular hold instruction to fit legibly. The mobile motion control uses a readable 12px label within a 96px button, clear of the central hold control. Larger service copy has additional vertical room; the enquiry Close button now occupies its own row above the label.
+
+Browser verified at 1280 × 720, 390 × 720, and 320 × 720. Desktop and mobile pages have no horizontal overflow. At 320px, expanded service copy fits within its 331px panel, form labels are 15px, fields 16px, and helper text 14px; the dialog has no horizontal overflow. The mobile motion button ends at x108 and the hold circle starts at x114.5. Base and alternate layer heights match exactly at 320px and 1280px. A computed text audit found no remaining sub-12px ordinary text (the small principle navigation arrow is decorative). Reviewed hero, project details, expanded services, and enquiry form visually. Physical devices and browser zoom were not exercised.
+
+Production build and TypeScript passed; ESLint has zero errors and the two existing native-image advisories. Temporary responsive review fixture removed. Next.js feedback reporting pass: no qualifying framework issues retained.
+
+## Refined hold seal and ambient control removal — October 17, 2026
+
+Reworked the mobile hold control as an 84px etched seal with a fingerprint centre and small, balanced circular instructions. Its slower 28-second text orbit pauses during charging and reveal. Pressing compresses the centre, fills the progress ring, and emits a restrained halo. The revealed state turns copper and replaces the fingerprint with an outlined Astra spark; release reverses the expression and resumes the orbit. The header logo remains connected to the same phases. No caption pill was reintroduced. Keyboard, pointer-capture, cancellation, and assistive-toggle behavior remain intact; reduced motion disables decorative movement.
+
+Removed the ambient motion on/off button and its React pause state from the architectural scene. The scene still honours reduced motion, page visibility, intersection visibility, and the entry preparation state. Project-film playback controls are unchanged.
+
+Browser verified at 390 × 720 and 320 × 720: no motion-toggle element, no horizontal overflow, and an 84px hold target. A real 120ms tap returned charging → idle; a real 1.5-second hold reached revealed after about 545ms and returned idle on release. Settled reveal showed fingerprint opacity 0, spark opacity 1, paused orbit, and the logo in its revealed phase. After release, progress reset to 100, fingerprint returned, spark hid, and orbit resumed. Final idle and reveal screenshots retained outside public output. Physical-device haptics and frame rates were not measured.
+
+Production build and TypeScript passed. ESLint reports zero errors and the two existing native-image advisories. Removed the temporary hold-review fixture. Next.js feedback reporting pass retained no qualifying framework issues.
+
+## Complete mobile spacing and motion review — October 17, 2026
+
+Reviewed the portal journey, centred studio handoff, every service expansion, process copy, all three project films, principle navigation, closing statement, footer links, enquiry form, local brief preview/editing, and return-to-top flow. Browser layouts checked: 320 × 568, 390 × 720, 430 × 720, 667 × 375, and 844 × 390. These are browser viewport checks, not physical-device or frame-rate measurements.
+
+Fixed overlapping invisible mobile navigation hit areas by removing the old pseudo-element expansion; each link already has its own 100 × 44px area. Restricted desktop cursor-reveal tracking to noncompact layouts, preserving the explicit mobile hold interaction. Principle jumps now use the shared Lenis anchor pipeline with centred destinations instead of a competing native smooth-scroll call.
+
+At 320 × 568, the old 700px pinned hero placed its primary action behind the fixed hold control. Short portrait screens now use their actual viewport height and a reserved lower control area: the settled work action ends at y421.48, with the hold control starting at y466. The footer's own index now temporarily replaces floating chrome only while its links or credits cross the header band, avoiding duplicate overlapping navigation. Returning to the hero restores the chrome. Added a subtle shadow behind the hero eyebrow over bright sky.
+
+Short landscape phones use a normal 600px hero and studio flow instead of a pinned journey whose early fade could hide the CTA before it became reachable. The hold control becomes 68px in the lower-right corner; sound has a 44px target in the opposite corner. Desktop hover hints and shortcut controls are suppressed in this layout. Landscape changes are tracked by media queries so the motion pipeline rebuilds when the orientation layout changes.
+
+All reviewed base and alternate layers matched in height; scans found no horizontally outlying text or page overflow. Service descriptions fit their expanded panels. Project films reported 1920 × 1080, with the visible film playing and the other two paused. The enquiry form generated a local brief from dummy review data, and editing restored the entered values; no email was sent. A real 1.6-second hold on the smallest portrait layout recorded charging → revealed → idle, restored the logo, and left a zero-radius mask. The checked browser error log was empty.
+
+Final production build and TypeScript passed. ESLint reports zero errors and the same two existing native-image advisories. Temporary responsive review instrumentation removed. Next.js feedback reporting pass: no qualifying framework issues retained.
+
+## Zeltic particle interaction film — October 17, 2026
+
+Replaced the active Zeltic product-animation montage with a dedicated particle-wordmark cinematic. Used native browser cursor sweeps on the actual supplied project in a 1920 × 1080 desktop layout. The browser's raster capture surface was 1872 × 1072. The delivered 1920 × 1080 H.264 film uses a 1672 × 940 crop that removes the site navigation, a restrained 2.5% camera push, frame-blended 30fps delivery, and an 800ms wraparound dissolve. This is edited live-site footage, not generated product imagery or a claim of native 30fps recording. Discarded an incomplete continuous-capture experiment; the delivered film uses the complete sequential sweep across the wordmark.
+
+The new active assets are `public/videos/projects/zeltic-particles.mp4` (8.766667 seconds, approximately 2.9MB) and `public/images/projects/zeltic-particles.webp` (1920 × 1080, approximately 62KB). Old Zeltic assets remain archived but are no longer referenced by the project data. Keyed ProjectFilm by the selected film path so changing the asset remounts playback and clears any stale ready/failed state.
+
+Decoded the entire finished film without errors and visually inspected a frame with a pronounced particle trail. Browser verified actual playback on desktop and at 390 × 720: videoWidth 1920, videoHeight 1080, readyState 4, advancing currentTime, no media error, and object-fit contain on mobile. Pause/resume controls worked. The desktop preview error log was empty. Captured final desktop/mobile evidence outside public output. Temporary film review page removed and the browser viewport override reset; the source capture tab was closed.
+
+Production build and TypeScript passed. ESLint has zero errors and the same two existing native-image advisories. Next.js feedback reporting pass retained no qualifying framework issues.
+
+## Owner-supplied Zeltic recording — October 17, 2026
+
+Reviewed the supplied 13.75-second MOV at multiple points across its cursor sweeps and recovery. Its continuous captured motion and larger particle trails were stronger than the preceding screenshot-sequence edit, so it is now the active gallery film. The supplied original was not modified.
+
+Removed the top navigation, preserved the full horizontal recording area, and scaled proportionally with a small letterbox to 1920 × 1080. Moved a one-second settled-wordmark moment to the opening, followed it with the actual sweep/recovery sequence using a 300ms introductory dissolve, and removed excess idle time. The 11.5-second loop ends at the same source moment used at its beginning. Playback speed and particle motion are unchanged; source frames are converted to constant 60fps without motion synthesis. Audio is stripped for the silent project-card loop.
+
+The new active film is `public/videos/projects/zeltic-cursor-cinematic.mp4` (approximately 6.5MB versus the supplied approximately 88MB MOV), with a new 1920 × 1080 poster `zeltic-cursor-cinematic.webp`. Final encoding was explicitly checked as H.264 High, Level 4.2, yuv420p, 60fps, with fast-start metadata. Added the final yuv420p conversion after the dissolve to avoid the filter's automatic 4:4:4 output. Previous film assets remain inactive for history.
+
+The complete final file decoded without errors. Browser checked the new recording on desktop and at 390 × 720: source path correct, videoWidth 1920, videoHeight 1080, duration 11.5, currentTime advancing, paused false, no media error, and object-fit contain on mobile. Production build and TypeScript passed. The temporary responsive review fixture was removed. Next.js feedback reporting pass retained no qualifying framework issues.
+
+## Moving water treatment — October 17, 2026
+
+Reviewed the installed Three.js Water and Water2 implementations and the official Water documentation. Their reflected/refracted render targets depend on scene geometry; adding them directly to the illustrated room would not reconstruct its reflections. Kept the existing Three.js renderer and replaced its two screen-space sine distortions with a four-direction wave spectrum projected into water-plane coordinates. Wavelengths compress toward the shore, multiple periods keep the motion from moving as a single sheet, and restrained luminance modulation follows the original sunset reflections. This remains a 2.5D treatment of the original still artwork, not a physical ocean simulation.
+
+Added separate desktop and mobile water mattes with foreground and distant-water channels. Sample the matte before and after displacement to avoid pulling stonework into the water. Steps, pier, shoreline, sky, and mountains are excluded. Applied the same motion model at a smaller scale to the ocean continuation so it remains animated during the scroll-through. Wave calculations skip dry pixels, and the continuation branch skips completely until it is visible. No new runtime dependency or external texture request was added. Existing reduced-motion, context-loss, visibility, cleanup, and mobile scheduling behavior remain in place.
+
+Inspected consecutive native browser captures of the reflection movement, then checked the hero at 1280 × 720 and 390 × 720 and the mobile ocean transition. Both layouts reported a ready canvas, matching layout bounds, and no horizontal overflow. Browser error/warning log was empty. Production build including TypeScript and focused component ESLint passed. This was browser-based verification; physical-device performance was not measured. Next.js feedback reporting pass: no qualifying framework issues retained.
+
+## Simpler projects and clearer waves — October 17, 2026
+
+Reduced each project information panel to its name, a short descriptive sentence with personality, and one Visit website action. Removed the second title arrow/link, separate marketing headline, focus tags, repeated agency credit, and film caption. Kept the actual product film clickable and its accessible playback control. The single category/index label remains visible at every breakpoint. Base and alternate copy retain the shared reveal geometry.
+
+Increased water displacement from .0075/.0028 to .018/.008 in source-image UV space, raised the pool's phase speed from .8 to 1.35, and strengthened reflected-light modulation. Distant water and the continuation ocean received proportionate increases. Retained the protective water mattes and distance fade so increased motion cannot deform the stonework or horizon.
+
+Reviewed the simpler desktop and mobile cards and captured consecutive frames of the stronger water motion. All three cards reported exactly one information-panel arrow and no tags. At 390px and 320px, there was no horizontal overflow; base/alternate description heights matched and the alternate text fit. The browser warning/error log was empty. Production build including TypeScript, focused ESLint, and diff whitespace checks passed. Next.js feedback reporting pass retained no qualifying framework issues.
