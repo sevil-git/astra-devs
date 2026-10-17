@@ -11,6 +11,7 @@ import Enquiry from "./enquiry";
 import BrandMark from "./brand-mark";
 import HoldReveal, { type HoldStage } from "./hold-reveal";
 import { useMotionSettings } from "./motion";
+import FooterControls from "./footer-controls";
 
 const services = [
   {
@@ -236,13 +237,6 @@ function PageLayer({
           <section className="portrait-hero portal-hero">
             {!mirror && <ArchitecturalScene journey={journey} active={entered} />}
             <div className="hero-center" data-mask="expand">
-              <p className="hero-name">
-                <span className="hero-eyebrow-rule" aria-hidden="true" />
-                <span>ASTRA DEVS</span>
-                <span className="hero-descriptor">
-                  INDEPENDENT SOFTWARE STUDIO
-                </span>
-              </p>
               <h1
                 className="hero-heading"
                 aria-label={mirror ? undefined : "From what if to holy shit."}
@@ -934,17 +928,6 @@ export default function Portfolio() {
       }
       if (playEntrance) {
         gsap.fromTo(
-          ".hero-name",
-          { opacity: 0, y: 12 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: reduced ? 0 : 0.8,
-            delay: reduced ? 0 : 0.35,
-            ease: "power3.out",
-          },
-        );
-        gsap.fromTo(
           ".hero-introduction,.hero-work-link",
           { opacity: 0, y: 16 },
           {
@@ -1375,43 +1358,7 @@ export default function Portfolio() {
           />
         </div>
       </main>
-      <footer className="fixed-footer" inert={!entered}>
-        <div className="footer-shortcuts">
-          <a href="#work" aria-label="Explore our work">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="M3 9h18M7 7h.1m3 0h.1" />
-            </svg>
-          </a>
-          <a href="#services" aria-label="Explore our services">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m8 5-6 7 6 7m8-14 6 7-6 7m-3-16-2 18" />
-            </svg>
-          </a>
-          <button onClick={openEnquiry} aria-label="Start a project">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="m3 5 9 8 9-8" />
-            </svg>
-          </button>
-        </div>
-        <button
-          className="sound-toggle"
-          onClick={toggleSound}
-          aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
-          aria-pressed={soundOn}
-        >
-          <span>SOUND</span>
-          <span className={soundOn ? "selected" : ""}>ON</span>
-          <span className={!soundOn ? "selected" : ""}>OFF</span>
-          <i className={soundOn ? "sound-bars is-on" : "sound-bars"}>
-            <b />
-            <b />
-            <b />
-            <b />
-          </i>
-        </button>
-      </footer>
+      <FooterControls entered={entered} soundOn={soundOn} onToggleSound={toggleSound} />
       <HoldReveal enabled={entered && !enquiryOpen} onStageChange={changeHoldStage} />
       <Enquiry open={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
     </div>

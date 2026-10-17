@@ -125,26 +125,17 @@ export default function HoldReveal({ enabled, onStageChange }: {
         }
       }}
     >
-      <span className="hold-echo" aria-hidden="true" />
       <svg className="hold-ring" viewBox="0 0 100 100" aria-hidden="true">
-        <defs><path id="astra-hold-circle" d="M50 50m-39 0a39 39 0 1 1 78 0a39 39 0 1 1-78 0" /></defs>
+        <defs><path id="astra-explore-circle" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0" /></defs>
         <text>
-          <textPath href="#astra-hold-circle" startOffset="0%">HOLD TO REVEAL ·</textPath>
-          <textPath href="#astra-hold-circle" startOffset="50%">THE OTHER SIDE ·</textPath>
+          <textPath href="#astra-explore-circle" startOffset="0%">HOLD TO EXPLORE ·</textPath>
+          <textPath href="#astra-explore-circle" startOffset="50%">HOLD TO EXPLORE ·</textPath>
         </text>
       </svg>
       <svg className="hold-progress" viewBox="0 0 100 100" aria-hidden="true">
-        <circle className="hold-track" cx="50" cy="50" r="47" />
-        <circle ref={progressRef} cx="50" cy="50" r="47" pathLength="100" strokeDasharray="100" strokeDashoffset="100" />
+        <circle ref={progressRef} cx="50" cy="50" r="48" pathLength="100" strokeDasharray="100" strokeDashoffset="100" />
       </svg>
-      <span className="hold-core" aria-hidden="true">
-        <svg className="hold-fingerprint" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round">
-          <path d="M6 17v-3a10 10 0 0 1 20 0v3M9 24c1-3 1-6 1-10a6 6 0 0 1 12 0c0 6 0 9 2 12M5 23c1-2 1-4 1-6M13 28c1-4 1-9 1-14a2 2 0 0 1 4 0c0 6 0 11 2 15M17 22v-4M16 27v2" />
-        </svg>
-        <svg className="hold-reveal-glyph" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round">
-          <path d="M16 4c1.5 8 4 10.5 12 12-8 1.5-10.5 4-12 12C14.5 20 12 17.5 4 16c8-1.5 10.5-4 12-12Z" />
-        </svg>
-      </span>
+      {phase === "revealed" && <span className="hold-label" aria-hidden="true">RELEASE</span>}
       <span id="hold-reveal-help" className="hold-sr-only">Hold for a moment to reveal playful text. Release anywhere to return. Screen reader users can activate to toggle.</span>
       <span className="hold-sr-only" role="status">{phase === "revealed" ? "Alternate view revealed." : ""}</span>
     </button>

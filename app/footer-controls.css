@@ -1,0 +1,52 @@
+/* A quiet vertical rail. The hit area stays still while its symbol follows the pointer. */
+.motion-site .fixed-footer { mix-blend-mode: normal; }
+.footer-shortcuts { left: calc(var(--edge) - 10px); bottom: 9.92063vh; }
+.footer-shortcuts ul { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.footer-shortcuts .footer-shortcut {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  color: #b7ab98; -webkit-tap-highlight-color: transparent;
+}
+.shortcut-symbol { display: grid; place-items: center; width: 24px; height: 24px; transition: color .4s cubic-bezier(.165,.84,.44,1); }
+.footer-shortcuts svg { width: 22px; height: 22px; stroke-width: 1.5; }
+.footer-shortcuts .footer-shortcut:hover .shortcut-symbol,
+.footer-shortcuts .footer-shortcut:focus-visible .shortcut-symbol { color: #dd936c; }
+.footer-shortcut:focus-visible { outline: 1px solid #dd936c; outline-offset: 2px; border-radius: 50%; }
+
+.fixed-footer .sound-toggle {
+  top: auto; left: auto; right: calc(var(--edge) - 46px); bottom: calc(9.92063vh + 30px);
+  display: flex; justify-content: center; align-items: center; gap: 7px;
+  width: 104px; height: 44px; min-height: 44px; padding: 0;
+  transform: rotate(-90deg); writing-mode: horizontal-tb;
+  border: 0; border-radius: 0; background: none; color: #b7ab98;
+  font: 600 13px/1.25 "Manrope", sans-serif; letter-spacing: .025em;
+  text-shadow: 0 1px 8px #0009;
+  transition: color .4s cubic-bezier(.165,.84,.44,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.fixed-footer .sound-toggle::after { content: none; }
+.fixed-footer .sound-toggle > span { display: block; opacity: 1; }
+.fixed-footer .sound-toggle .sound-label { opacity: .65; }
+.fixed-footer .sound-toggle .sound-state-window { width: 2.1em; height: 1.25em; overflow: hidden; text-align: left; }
+.sound-state-track { display: block; position: relative; height: 100%; }
+.sound-state-track > span {
+  display: block; position: absolute; inset: 0; height: 1.25em;
+  transform: translateY(-100%); transition: transform .65s cubic-bezier(.165,.84,.44,1);
+}
+.sound-state-track > span:last-child { transform: translateY(0); }
+[data-sound-on="true"] .sound-state-track > span:first-child { transform: translateY(0); }
+[data-sound-on="true"] .sound-state-track > span:last-child { transform: translateY(-100%); }
+.fixed-footer .sound-toggle:hover,
+.fixed-footer .sound-toggle:focus-visible { color: #dd936c; }
+.fixed-footer .sound-toggle:focus-visible { outline: 1px solid #dd936c; outline-offset: 1px; }
+.touch-revealed .fixed-footer .sound-toggle { background: none; color: #38251d; text-shadow: none; }
+@media (max-width: 767.98px) {
+  .footer-shortcuts { display: none; }
+  .fixed-footer .sound-toggle { right: -20px; bottom: calc(48px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 1024px) and (max-height: 480px) and (orientation: landscape) {
+  .footer-shortcuts { display: none; }
+  .fixed-footer .sound-toggle { left: 16px; right: auto; bottom: 14px; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shortcut-symbol, .sound-state-track > span, .fixed-footer .sound-toggle { transition: none; }
+}

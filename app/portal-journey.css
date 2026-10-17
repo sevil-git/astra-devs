@@ -122,8 +122,7 @@
   .about-sequence #studio { scroll-margin-top: 0; }
   .studio-intro-stage { height: auto; background: none; }
   .studio-intro-stage .about-intro { position: relative; height: auto; opacity: 1; padding: 100px 0; }
-  .touch-hold { left: auto; right: 16px; width: 68px; height: 68px; transform: none; bottom: 14px; }
-  .touch-hold .hold-core { inset: 18px; }
+  .touch-hold { left: auto; right: 16px; width: 64px; height: 64px; transform: none; bottom: 14px; }
   .portal-hero .hero-scroll, .hero-reveal-hint, .hero-scene-note { display: none; }
   .footer-shortcuts { display: none; }
   .sound-toggle {

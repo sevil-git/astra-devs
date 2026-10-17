@@ -16,6 +16,8 @@ import "./hold-reveal.css";
 import "./portal-journey.css";
 import "./mobile-navigation.css";
 import "./readability.css";
+import "./footer-controls.css";
+import "./spacing.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
