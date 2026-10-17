@@ -1,0 +1,43 @@
+/* The easter egg changes the light, never the framing or the page layout. */
+.fixed-logo { touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.is-after-hours .fixed-logo .brand-mark { color: #dce4f0; }
+.is-after-hours .fixed-logo .mark-spark { fill: #bccde4; }
+.fixed-logo .brand-mark { transition: color 2.8s ease; }
+.fixed-logo .mark-spark { transition: fill 2.8s ease, transform .3s ease; }
+.after-hours-note {
+  position: fixed; z-index: 22; top: 98px; left: 50%;
+  width: max-content; max-width: calc(100% - 64px); padding: 12px 20px;
+  transform: translate(-50%, -6px); pointer-events: none;
+  color: #dbe5f3; background: #101724d9; border: 1px solid #a8bed329; border-radius: 6px;
+  opacity: 0; transition: opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1);
+  text-align: center;
+}
+.after-hours-note[data-visible="true"] { opacity: 1; transform: translate(-50%, 0); }
+.after-hours-note > span { font: 500 10px/1.6 "Manrope", sans-serif; letter-spacing: .12em; color: #aebed1; }
+.after-hours-note > p { margin-top: 5px; font: 400 13px/1.6 "Manrope", sans-serif; }
+.portal-night-fallback { position: absolute; inset: 0; opacity: 0; transition: opacity 2.8s cubic-bezier(.65,0,.35,1); }
+.portal-night-fallback[data-night="true"] { opacity: 1; }
+.portal-journey .portal-night-fallback {
+  transform-origin: 71.6% 34.7%; transform: scale(var(--portal-fallback-scale, 1));
+}
+.night-room, .night-room img, .night-window { position: absolute; inset: 0; width: 100%; height: 100%; }
+.night-room img { object-fit: cover; object-position: center; filter: grayscale(1) brightness(.6); }
+.night-room::after { content: ""; position: absolute; inset: 0; background: #6f91bd33; mix-blend-mode: color; }
+.night-window {
+  mask-image: url('/images/threshold/aperture-desktop.svg'); mask-mode: luminance;
+  mask-position: center; mask-size: cover; mask-repeat: no-repeat;
+}
+.night-window img { position: absolute; max-width: none; }
+@media (max-width: 767.98px) {
+  .after-hours-note { top: 156px; width: max-content; max-width: calc(100% - 64px); padding: 10px 16px; }
+  .after-hours-note > p { font-size: 12px; max-width: 25ch; }
+  .night-window { mask-image: url('/images/threshold/aperture-mobile.svg'); }
+  .portal-journey .portal-night-fallback { transform-origin: 52.5% 30.5%; }
+}
+@media (max-height: 480px) and (orientation: landscape) {
+  .after-hours-note { top: 84px; padding: 8px 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-night-fallback, .fixed-logo .brand-mark, .fixed-logo .mark-spark, .after-hours-note { transition: none; }
+  .portal-journey .portal-night-fallback { transform: none; }
+}

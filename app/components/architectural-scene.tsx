@@ -6,17 +6,75 @@ import * as THREE from "three";
 const desktop = "/images/threshold/threshold-desktop.webp";
 const mobile = "/images/threshold/threshold-mobile.webp";
 const ocean = "/images/threshold/ocean-continuation.webp";
+const nightOcean = "/images/threshold/ocean-after-hours.webp";
 
 /* Two depth planes: near architecture and a distant, continuous seascape. */
-export default function ArchitecturalScene({ journey, active }: { journey: RefObject<number>; active: boolean }) {
+export default function ArchitecturalScene({ journey, active, afterHours, onNightReady }: {
+  journey: RefObject<number>;
+  active: boolean;
+  afterHours: boolean;
+  onNightReady: (ready: boolean) => void;
+}) {
   const hostRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const activeRef = useRef(active);
+  const nightRef = useRef(afterHours);
+  const nightReadyRef = useRef(false);
+  const nightImageRef = useRef<HTMLImageElement | null>(null);
+  const fallbackRef = useRef<HTMLDivElement>(null);
   const [available, setAvailable] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [imageReady, setImageReady] = useState(false);
+  const [nightReady, setNightReady] = useState(false);
 
   useEffect(() => { activeRef.current = active; }, [active]);
+  useEffect(() => { nightRef.current = afterHours; }, [afterHours]);
+
+  // Fetch only when the secret is discovered; decoding finishes before any dissolve.
+  useEffect(() => {
+    if (!afterHours || nightReady) return;
+    let cancelled = false;
+    const image = new Image();
+    image.src = nightOcean;
+    image.decode().then(() => {
+      if (cancelled) return;
+      nightImageRef.current = image;
+      nightReadyRef.current = true;
+      setNightReady(true);
+      onNightReady(true);
+    }).catch(() => { if (!cancelled) onNightReady(false); });
+    return () => { cancelled = true; };
+  }, [afterHours, nightReady, onNightReady]);
+
+  // The static fallback uses the same moon registration and exact aperture matte.
+  useEffect(() => {
+    const fallback = fallbackRef.current;
+    const sea = fallback?.querySelector<HTMLElement>(".night-window img");
+    if (!fallback || !sea) return;
+    const resize = () => {
+      const width = fallback.clientWidth;
+      const height = fallback.clientHeight;
+      if (!width || !height) return;
+      const compact = width < 768;
+      const aspect = width / height;
+      const plateAspect = compact ? 900 / 1601 : 1672 / 941;
+      const coverX = Math.min(aspect / plateAspect, 1);
+      const coverY = Math.min(plateAspect / aspect, 1);
+      const scale = Math.max(width / (compact ? 900 : 1672), height / (compact ? 1601 : 941));
+      const seaWidth = 1672 * scale;
+      const seaHeight = 941 * scale;
+      const moonX = width / 2 + ((compact ? .699 : .814) - .5) * width / coverX;
+      const moonY = height / 2 - ((compact ? .647 : .586) - .5) * height / coverY;
+      Object.assign(sea.style, {
+        width: `${seaWidth}px`, height: `${seaHeight}px`,
+        left: `${moonX - .753 * seaWidth}px`, top: `${moonY - .434 * seaHeight}px`,
+      });
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(fallback);
+    resize();
+    return () => observer.disconnect();
+  }, [nightReady, available, reduced]);
 
   useEffect(() => {
     const image = imageRef.current;
@@ -74,6 +132,8 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
     const uniforms = {
       uImage: { value: null as THREE.Texture | null },
       uOcean: { value: null as THREE.Texture | null },
+      uNightOcean: { value: null as THREE.Texture | null },
+      uNight: { value: 0 },
       uAperture: { value: null as THREE.Texture | null },
       uWaterMask: { value: null as THREE.Texture | null },
       uWaterReady: { value: 0 },
@@ -81,6 +141,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       uOceanReady: { value: 0 },
       uCover: { value: new THREE.Vector2(1, 1) },
       uOceanCover: { value: new THREE.Vector2(1, 1) },
+      uNightCover: { value: new THREE.Vector2(1, 1) },
       uOceanCentre: { value: new THREE.Vector2(.5, .5) },
       uPortal: { value: new THREE.Vector2(.716, .653) },
       uSun: { value: new THREE.Vector2(.814, .586) },
@@ -97,6 +158,8 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       fragmentShader: `
         uniform sampler2D uImage;
         uniform sampler2D uOcean;
+        uniform sampler2D uNightOcean;
+        uniform float uNight;
         uniform sampler2D uAperture;
         uniform sampler2D uWaterMask;
         uniform float uWaterReady;
@@ -104,6 +167,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
         uniform float uOceanReady;
         uniform vec2 uCover;
         uniform vec2 uOceanCover;
+        uniform vec2 uNightCover;
         uniform vec2 uOceanCentre;
         uniform vec2 uPortal;
         uniform vec2 uSun;
@@ -175,6 +239,23 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
           // Each authored matte follows the actual inner stone edge and sill.
           float aperture = texture2D(uAperture, roomUv).r * uApertureReady;
           float reveal = aperture * smoothstep(.05, .18, uJourney) * uOceanReady;
+          // Relight the original geometry and its reflections; never morph the stone.
+          if (uNight > .001) {
+            float luminance = dot(room.rgb, vec3(.2126, .7152, .0722));
+            vec3 moonlitStone = mix(room.rgb * vec3(.30, .40, .58),
+              vec3(luminance) * vec3(.37, .46, .63), .82);
+            room.rgb = mix(room.rgb, moonlitStone, uNight);
+            if (aperture > .001) {
+              vec2 moonCentre = vec2(.753, .566) - (uSun - centre) * nearScale / uCover * uNightCover;
+              vec2 moonUv = (vUv - .5) * uNightCover + moonCentre;
+              float water = 1.0 - smoothstep(.44, .466, moonUv.y);
+              vec3 flow = vec3(0.0);
+              if (water > .001) flow = waterMotion(moonUv, .466, .466, .35, 1.0);
+              vec4 moonView = texture2D(uNightOcean, clamp(moonUv + flow.xy * water, .001, .999));
+              moonView.rgb *= 1.0 + flow.z * water * .6;
+              room.rgb = mix(room.rgb, moonView.rgb, aperture * uNight);
+            }
+          }
           vec4 colour = room;
           if (reveal > .001) {
             float farScale = 1.0 + travel * .24;
@@ -189,6 +270,20 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
             seaUv += seaMotion.xy * seaWater;
             vec4 sea = texture2D(uOcean, clamp(seaUv, .001, .999));
             sea.rgb *= 1.0 + seaMotion.z * seaWater * .6;
+            if (uNight > .001) {
+              // Portrait's window has a tighter vertical field of view than the
+              // open ocean. Ease between them as the camera passes the stone.
+              vec2 nightCover = mix(uNightCover, uOceanCover, smoothstep(.15, .65, uJourney));
+              vec2 nightCentre = vec2(.753, .566) - (uSun - centre) * nearScale / uCover * nightCover / farScale;
+              nightCentre = mix(nightCentre, uOceanCentre, smoothstep(.18, .62, uJourney));
+              vec2 nightUv = (vUv - .5) * nightCover / farScale + nightCentre;
+              float nightWater = 1.0 - smoothstep(.44, .466, nightUv.y);
+              vec3 nightFlow = vec3(0.0);
+              if (nightWater > .001) nightFlow = waterMotion(nightUv, .466, .466, .65, 1.15);
+              vec4 nightSea = texture2D(uNightOcean, clamp(nightUv + nightFlow.xy * nightWater, .001, .999));
+              nightSea.rgb *= 1.0 + nightFlow.z * nightWater * .6;
+              sea = mix(sea, nightSea, uNight);
+            }
             colour = mix(room, sea, reveal);
           }
           gl_FragColor = colour;
@@ -208,6 +303,12 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
     let request = 0;
     let texture: THREE.Texture | null = null;
     let seaTexture: THREE.Texture | null = null;
+    let nightTexture: THREE.Texture | null = null;
+    let nightMix = 0;
+    let nightFrom = 0;
+    let nightTarget = 0;
+    let nightElapsed = 0;
+    let lastNightMark = "";
     let apertureTexture: THREE.Texture | null = null;
     let waterTexture: THREE.Texture | null = null;
     let lastJourney = -1;
@@ -230,6 +331,10 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
         uniforms.uCover.value.set(
           Math.min(aspect / imageAspect, 1),
           Math.min(imageAspect / aspect, 1),
+        );
+        uniforms.uNightCover.value.set(
+          uniforms.uCover.value.x * image.width / 1672,
+          uniforms.uCover.value.y * image.height / 941,
         );
       }
       if (seaTexture) {
@@ -297,8 +402,10 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
           ready = true;
           resize();
           uniforms.uJourney.value = journey.current;
-          renderer.render(scene, camera);
-          setAvailable(true);
+          if (!lost) {
+            renderer.render(scene, camera);
+            setAvailable(true);
+          }
         },
         undefined,
         () => {
@@ -331,6 +438,29 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       if (now - last < interval - 1 && !dirty) return;
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
+      if (nightReadyRef.current && nightImageRef.current && !nightTexture) {
+        nightTexture = new THREE.Texture(nightImageRef.current);
+        nightTexture.colorSpace = THREE.SRGBColorSpace;
+        nightTexture.minFilter = THREE.LinearFilter;
+        nightTexture.generateMipmaps = false;
+        nightTexture.needsUpdate = true;
+        uniforms.uNightOcean.value = nightTexture;
+      }
+      const target = nightRef.current && nightTexture && seaTexture ? 1 : 0;
+      if (target !== nightTarget) {
+        nightFrom = nightMix;
+        nightTarget = target;
+        nightElapsed = 0;
+      }
+      nightElapsed = Math.min(1, nightElapsed + dt / 2.8);
+      const blend = nightElapsed * nightElapsed * (3 - 2 * nightElapsed);
+      nightMix = nightFrom + (nightTarget - nightFrom) * blend;
+      uniforms.uNight.value = nightMix;
+      const nightMark = nightMix.toFixed(3);
+      if (nightMark !== lastNightMark) {
+        renderer.domElement.dataset.afterHours = nightMark;
+        lastNightMark = nightMark;
+      }
       if (activeRef.current) {
         time += dt;
         pointer.lerp(aim, 1 - Math.exp(-dt * 2.5));
@@ -380,6 +510,7 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
       renderer.domElement.removeEventListener("webglcontextlost", contextLost);
       texture?.dispose();
       seaTexture?.dispose();
+      nightTexture?.dispose();
       apertureTexture?.dispose();
       waterTexture?.dispose();
       material.dispose();
@@ -408,6 +539,18 @@ export default function ArchitecturalScene({ journey, active }: { journey: RefOb
             decoding="async"
           />
         </picture>
+        {nightReady && (!available || reduced) && (
+          <div className="portal-night-fallback" data-night={afterHours} ref={fallbackRef}>
+            <picture className="night-room">
+              <source media="(max-width: 767.98px)" srcSet={mobile} />
+              <img src={desktop} alt="" width="1672" height="941" />
+            </picture>
+            <div className="night-window">
+              {/* eslint-disable-next-line @next/next/no-img-element -- Source-pixel registration keeps the fallback moon aligned with the aperture. */}
+              <img src={nightOcean} alt="" width="1672" height="941" />
+            </div>
+          </div>
+        )}
         <div className="portal-canvas" ref={hostRef} />
         <div className="portal-shade" />
         <div className="portal-finish" />

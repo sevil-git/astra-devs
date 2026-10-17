@@ -57,3 +57,7 @@ Locally hosted **Space Grotesk** (display) and **Manrope** (supporting text), La
 ## Portal ocean continuation — October 17, 2026
 
 `public/images/threshold/ocean-continuation.webp` is original AI-generated supporting scenery, created with the built-in image-generation tool using the existing Astra architectural illustration as a reference. Its PNG original and full production prompt are retained in the repository; see `docs/ASSET-PROMPTS.md`. The 1672 × 941 served WebP is approximately 130 KiB. The companion aperture SVGs are authored geometric masks, not third-party imagery.
+
+## After hours moonlit ocean — October 17, 2026
+
+`public/images/threshold/ocean-after-hours.webp` is a 1672 × 941 original AI-generated night edit of the ocean continuation, created with the built-in imagegen tool. It is 151,724 bytes and loads only when the visitor discovers the three-tap logo gesture. The generated master is retained as `ocean-after-hours-source.png`. The complete prompt set and scene integration details are in `docs/AFTER-HOURS.md`. The original architecture and water reflections are relit in the existing shader; they are not replaced by independently generated stonework, so the composition stays registered during the dissolve. No external stock media or new background video is used.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject, type MouseEvent as ReactMouseEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -217,6 +217,8 @@ function PageLayer({
   openService,
   onService,
   journey,
+  afterHours,
+  onNightReady,
 }: {
   mirror: boolean;
   entered: boolean;
@@ -225,6 +227,8 @@ function PageLayer({
   openService: number | null;
   onService: (index: number | null) => void;
   journey: RefObject<number>;
+  afterHours: boolean;
+  onNightReady: (ready: boolean) => void;
 }) {
   return (
     <>
@@ -235,7 +239,7 @@ function PageLayer({
       >
         <div className="portal-journey">
           <section className="portrait-hero portal-hero">
-            {!mirror && <ArchitecturalScene journey={journey} active={entered} />}
+            {!mirror && <ArchitecturalScene journey={journey} active={entered} afterHours={afterHours} onNightReady={onNightReady} />}
             <div className="hero-center" data-mask="expand">
               <h1
                 className="hero-heading"
@@ -619,6 +623,10 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("about");
   const [activePrinciple, setActivePrinciple] = useState(0);
   const [soundOn, setSoundOn] = useState(false);
+  const [afterHours, setAfterHours] = useState(false);
+  const [nightReady, setNightReady] = useState(false);
+  const [nightNotice, setNightNotice] = useState(false);
+  const logoTaps = useRef({ count: 0, last: 0 });
   const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [openService, setOpenService] = useState<number | null>(null);
   const { reduced, fine, compact, shortLandscape } = useMotionSettings();
@@ -644,6 +652,28 @@ export default function Portfolio() {
     hold: false,
   });
   const radiusTween = useRef<gsap.core.Tween | null>(null);
+
+  useEffect(() => {
+    if (!afterHours || !nightReady) return;
+    const show = setTimeout(() => setNightNotice(true), reduced ? 0 : 1700);
+    const hide = setTimeout(() => setNightNotice(false), 8000);
+    return () => { clearTimeout(show); clearTimeout(hide); };
+  }, [afterHours, nightReady, reduced]);
+
+  const tapLogo = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey || event.button !== 0) return;
+    const now = performance.now();
+    const taps = logoTaps.current;
+    taps.count = now - taps.last < 1100 ? taps.count + 1 : 1;
+    taps.last = now;
+    if (taps.count !== 3) return;
+    taps.count = 0;
+    // Ordinary clicks remain Home links; the third click owns the secret gesture.
+    event.preventDefault();
+    event.stopPropagation();
+    setNightNotice(false);
+    setAfterHours(value => !value);
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -1274,7 +1304,7 @@ export default function Portfolio() {
 
   return (
     <div
-      className={`motion-site ${entered ? "has-entered" : ""} ${touchReveal ? "touch-revealed" : ""}`}
+      className={`motion-site ${entered ? "has-entered" : ""} ${touchReveal ? "touch-revealed" : ""} ${afterHours && nightReady ? "is-after-hours" : ""}`}
       ref={rootRef}
     >
       <div className="reading-progress" aria-hidden="true" />
@@ -1317,7 +1347,7 @@ export default function Portfolio() {
         </button>
       </div>
       <header className="fixed-header" inert={!entered}>
-        <a className="fixed-logo" href="#about" aria-label="Astra devs home">
+        <a className="fixed-logo" href="#about" aria-label="Astra devs home" onClick={tapLogo}>
           <BrandMark interactive active={entered} revealStage={holdStage} />
           <span className="header-wordmark" aria-hidden="true">
             astra devs
@@ -1344,6 +1374,8 @@ export default function Portfolio() {
             openService={openService}
             onService={setOpenService}
             journey={journeyRef}
+            afterHours={afterHours}
+            onNightReady={setNightReady}
           />
         </div>
         <div className="mask-layer" aria-hidden="true" inert>
@@ -1355,11 +1387,16 @@ export default function Portfolio() {
             openService={openService}
             onService={() => {}}
             journey={journeyRef}
+            afterHours={afterHours}
+            onNightReady={setNightReady}
           />
         </div>
       </main>
       <FooterControls entered={entered} soundOn={soundOn} onToggleSound={toggleSound} />
       <HoldReveal enabled={entered && !enquiryOpen} onStageChange={changeHoldStage} />
+      <div className="after-hours-note" data-visible={nightNotice && afterHours} role="status" aria-live="polite" aria-atomic="true">
+        {nightNotice && afterHours && <><span>AFTER HOURS AT ASTRA</span><p>Still here? So are we. One last commit.</p></>}
+      </div>
       <Enquiry open={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
     </div>
   );
