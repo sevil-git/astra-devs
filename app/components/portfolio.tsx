@@ -16,25 +16,25 @@ import { useMotionSettings } from "./motion";
 const services = [
   {
     title: "Websites",
-    hidden: "First impressions. Lasting impact.",
+    hidden: "Pretty. Fast. No loading wheel of doom.",
     description:
       "Expressive websites, immersive experiences, and e-commerce. Fast, thoughtful, and built to be remembered.",
   },
   {
     title: "Apps",
-    hidden: "From a what if to a daily habit.",
+    hidden: "The app people open. Not just download.",
     description:
       "Web apps, mobile apps, and software platforms. Complicated problems, beautifully simple experiences.",
   },
   {
     title: "Automation",
-    hidden: "Less busywork. More good work.",
+    hidden: "Because copy-paste is not a career plan.",
     description:
       "Connect your tools, remove repetitive tasks, and give your team its time back. Let the software handle it.",
   },
   {
     title: "AI & tools",
-    hidden: "A little less artificial. A lot more useful.",
+    hidden: "Useful intelligence. No robot uprising.",
     description:
       "Practical AI integrations, custom internal tools, and systems built around the way your business actually works.",
   },
@@ -44,15 +44,15 @@ const process = [
     number: "01",
     title: "Strategy & discovery",
     detail: "Find the right problem",
-    alternate: "Ask better questions",
+    alternate: "Ask the awkward questions",
     hidden: "Before the pixels",
   },
   {
     number: "02",
     title: "Design & prototype",
     detail: "Make the idea tangible",
-    alternate: "Move things around",
-    hidden: "Until it feels right",
+    alternate: "Move it two pixels",
+    hidden: "Yes, those two pixels matter",
   },
   {
     number: "03",
@@ -66,7 +66,7 @@ const process = [
     title: "Test, launch, evolve",
     detail: "Make a good thing better",
     alternate: "Break it. Fix it. Ship it.",
-    hidden: "Then do it all again",
+    hidden: "Preferably in that order",
   },
 ];
 const principles = [
@@ -78,13 +78,13 @@ const principles = [
   },
   {
     lines: ["Good code does", "the heavy", "lifting."],
-    hidden: ["The best kind", "of magic", "actually works."],
+    hidden: ["It works on", "your machine,", "too."],
     label: "THE ENGINEERING",
     caption: "Beautiful on the inside, too.",
   },
   {
     lines: ["Build for real", "people.", "Always."],
-    hidden: ["Not for awards.", "Not for robots.", "For you."],
+    hidden: ["Made for people.", "Even the ones", "who hate tech."],
     label: "THE PURPOSE",
     caption: "People are the whole point.",
   },
@@ -241,11 +241,11 @@ function PageLayer({
             </p>
             <h1
               className="hero-heading"
-              aria-label={mirror ? undefined : "Ideas into experiences."}
+              aria-label={mirror ? undefined : "From what if to holy shit."}
             >
               {(mirror
-                ? ["A little less", "ordinary."]
-                : ["Ideas into", "experiences."]
+                ? ["Less blah blah.", "More ta-da."]
+                : ["From “what if”", "to “holy shit.”"]
               ).map((line, i) => (
                 <span
                   className={`hero-line ${i === 0 ? "hero-opening" : ""}`}
@@ -258,12 +258,12 @@ function PageLayer({
             </h1>
             <p className="hero-introduction">
               {mirror
-                ? "A little curiosity. A lot of care."
+                ? "We take the work seriously."
                 : "Websites, apps & automations."}
               <br />
               {mirror
-                ? "Good ideas deserve a different perspective."
-                : "Thoughtfully designed. Beautifully built."}
+                ? "Ourselves? A little less."
+                : "Good software. Minus the drama."}
             </p>
             <a
               className="hero-work-link"
@@ -275,7 +275,7 @@ function PageLayer({
             </a>
           </div>
           <span className="hero-reveal-hint" aria-hidden="true">
-            {mirror ? "A LITTLE LESS ORDINARY." : "HOVER TO SEE ANOTHER SIDE"}
+            {mirror ? "LESS BLAH BLAH. MORE TA-DA." : "HOVER TO SEE ANOTHER SIDE"}
           </span>
           <span className="hero-scene-note" aria-hidden="true">
             A NEW PERSPECTIVE.
@@ -303,8 +303,8 @@ function PageLayer({
                 "& meaningful impact.",
               ]}
               secret={[
-                "A small team. Big ideas.",
-                "Curiosity in the details.",
+                "Big ideas. Small egos.",
+                "Far too many tabs open.",
                 "Care in every decision,",
                 "and code with purpose.",
               ]}
@@ -417,13 +417,13 @@ function PageLayer({
             <div className="chapter-rule" aria-hidden="true" />
             <Label>03 / SELECTED WORK</Label>
             <h2 className="work-section-heading">
-              Different worlds.
+              Built to work.
               <br />
-              <em>The same care.</em>
+              <em>Hard to ignore.</em>
             </h2>
             <p className="work-section-intro">
-              A storefront. A platform. An interactive playground. A considered
-              experience, every time.
+              A drinks brand. A music platform. A keyboard playground.
+              We have range. And apparently, hobbies.
             </p>
           </div>
           <div className="copy-container work-showcase-container">
@@ -537,14 +537,14 @@ function PageLayer({
           <div className="copy-container contact-invitation">
             <span className="section-label">05 / THE NEXT CHAPTER</span>
             <button onClick={onEnquiry}>
-              <span>Let’s make</span>
+              <span>Let’s build</span>
               <br />
-              it happen.
+              the good stuff.
               <Arrow diagonal />
             </button>
             <p>
-              A website. A product. A simpler way to work. Every good project
-              starts with a conversation.
+              A website. An app. A task you wish a robot would do. Tell us what
+              you have in mind. Napkin sketches are a perfectly good start.
             </p>
           </div>
           <div className="copy-container connect-grid">
@@ -576,12 +576,12 @@ function PageLayer({
                   />
                   <RollLink
                     label="Start a project"
-                    alternate="Make a little magic"
+                    alternate="Napkins welcome"
                     onClick={onEnquiry}
                   />
                   <RollLink
                     label="Back to top"
-                    alternate="One more time"
+                    alternate="Miss us already?"
                     href="#about"
                   />
                 </div>

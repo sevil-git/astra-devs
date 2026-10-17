@@ -2,10 +2,10 @@ export const projects = [
   {
     name: "Zeltic",
     type: "E-commerce experience",
-    headline: "A fresh perspective on everyday hydration.",
+    headline: "Hydration. With a splash of drama.",
     description:
       "A vivid digital storefront for an electrolyte drink brand. Product storytelling, flavour discovery, and shopping come together in one expressive experience.",
-    secret: "A fresh take on hydration. Built to make a splash.",
+    secret: "A website for staying hydrated. Built on suspicious amounts of coffee.",
     tags: "E-commerce · Product storytelling · Interactive website",
     image: "/images/projects/zeltic.png",
     film: "/videos/projects/zeltic-desktop.mp4",
@@ -34,10 +34,10 @@ export const projects = [
   {
     name: "Maestera",
     type: "Music education platform",
-    headline: "A better way to find your rhythm.",
+    headline: "Great teachers. Fewer wrong notes.",
     description:
       "A home for finding the right music teacher. Explore instruments, discover teachers, and find online or in-person lessons around your goals and location.",
-    secret: "Helping the next great musician find their first teacher.",
+    secret: "Your neighbours are rooting for this one.",
     tags: "Web platform · Teacher discovery · Music education",
     image: "/images/projects/maestera.png",
     film: "/videos/projects/maestera-desktop.mp4",
@@ -66,10 +66,10 @@ export const projects = [
   {
     name: "Nimbus",
     type: "Interactive 3D website",
-    headline: "A product you can almost feel.",
+    headline: "A very good reason to keep typing.",
     description:
       "An immersive product experience for Nimbus keyboards. Explore the Vapor75 in 3D, try switch options, and change keycap styles in an interactive playground.",
-    secret: "A keyboard you can almost feel through the screen.",
+    secret: "Yes, we made a keyboard worth staring at.",
     tags: "3D product experience · Interactive customisation · Creative development",
     image: "/images/projects/nimbus.png",
     film: "/videos/projects/nimbus-desktop.mp4",

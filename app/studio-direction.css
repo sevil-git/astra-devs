@@ -687,3 +687,29 @@
 em, i { font-style: normal; }
 .hero-heading, .work-section-heading, .project-title, .motto-heading, .contact-invitation > button, .enquiry-heading { font-family: "Space Grotesk", sans-serif; }
 .work-section-heading em, .enquiry-title em { font-style: normal; font-weight: 500; }
+
+/* Stronger display hierarchy, shared by both reveal layers. */
+.portal-hero .hero-heading,
+.portal-hero .hero-opening,
+.work-section-heading,
+.work-section-heading em,
+.project-title,
+.motto-heading,
+.motto-line:first-child,
+.contact-invitation > button,
+.contact-invitation > button > span,
+.enquiry-dialog h2,
+.enquiry-dialog h2 em,
+.capability-row .oversize-heading,
+.capability-row .row-reveal-content h2 {
+  font-weight: 700;
+}
+.about-intro .maskable-text strong,
+.experience-intro .maskable-text strong {
+  font-weight: 700;
+}
+@media (max-width: 374px) {
+  .portal-hero .hero-heading { font-size: 40px; }
+}
+/* Each hero voice keeps the same two deliberate lines. */
+.portal-hero .hero-line { white-space: nowrap; }

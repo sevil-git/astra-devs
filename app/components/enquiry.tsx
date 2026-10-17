@@ -131,8 +131,8 @@ export default function Enquiry({
         ) : (
           <>
             <p className="enquiry-intro">
-              Tell us what you’re thinking. We’ll help you turn it into a
-              project brief, ready to email to kalesahil565@gmail.com.
+              Napkin sketches welcome. A 40-page deck is strictly optional.
+              We’ll help you prepare a brief to email to kalesahil565@gmail.com.
             </p>
             <form
               onSubmit={(e) => {

@@ -134,3 +134,18 @@ Desktop page layers both measure 8,539.94px, with three gallery chapters, no dec
 - All three MP4 files decoded to completion without errors. Final sizes: Zeltic 3.31MB / 10.96s, Maestera 0.68MB / 8.08s, Nimbus 2.56MB / 10.92s. These load independently on visibility, not together on initial landing.
 - Production build and TypeScript passed. ESLint: zero errors, two native-image optimisation advisories (existing closing artwork and the precompressed film poster). No browser console errors in the retained local preview. Physical iOS/Android devices and device-level reduced-motion preferences were not exercised.
 - Temporary capture and responsive-test HTML pages were removed from public output. Browser viewport override was reset after capture setup.
+
+## Bold headings and studio voice — October 17, 2026
+
+- Increased display headings to locally available Space Grotesk 700: hero, work introduction, project names, services, closing statement, contact invitation, and enquiry heading. The smallest hero size is 40px to retain comfortable spacing at 320px.
+- Added restrained humour to the hero supporting copy, service reveals, process alternates, project captions, enquiry introduction, and hidden text. Project descriptions retain their factual feature summaries.
+- Browser verified display weights at 700, zero horizontal overflow at 390px and 320px, and identical base/alternate page heights. No alternate copy exceeded its measured container at 320px. Desktop and phone screenshots reviewed.
+- Production build and TypeScript passed; temporary responsive check page removed. No qualifying Next.js feedback issues encountered.
+
+### Hero headline refinement
+
+Replaced the main headline and page/social titles with “Let’s build the good stuff.” The underlying “A little less ordinary.” reveal remains. Desktop and 320px phone views inspected: headline fits, no horizontal overflow, base/alternate heights identical. Production build passed. No qualifying Next.js feedback issues encountered.
+
+### Distinct hero and matched reveal
+
+Replaced the hero with “From ‘what if’ to ‘holy shit.’” and paired its two lines with “Less blah blah. / More ta-da.” The contact invitation “Let’s build the good stuff.” stays at the bottom. Hero lines explicitly avoid wrapping. At 320px, both voices remain two lines, with matching per-line heights and identical total page geometry; all text remains within the phone viewport. Desktop and phone views inspected, TypeScript passed, and no qualifying Next.js feedback issues encountered.

@@ -21,19 +21,19 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Astra devs — Ideas into experiences.",
+  title: "Astra devs — From what if to holy shit.",
   description:
     "An independent software studio building websites, apps, automations, and useful digital experiences. Ideas into reality, with Astra devs.",
   applicationName: "Astra devs",
   icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
   twitter: {
     card: "summary_large_image",
-    title: "Astra devs — Ideas into experiences.",
+    title: "Astra devs — From what if to holy shit.",
     description: "Websites, apps, automations, and useful digital experiences.",
   },
   openGraph: {
-    title: "Astra devs — Ideas into experiences.",
-    description: "Websites. Apps. Automations. A little less ordinary.",
+    title: "Astra devs — From what if to holy shit.",
+    description: "Websites. Apps. Automations. Less blah blah. More ta-da.",
     type: "website",
   },
 };
