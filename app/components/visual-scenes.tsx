@@ -127,29 +127,6 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
         group.add(earth);
         group.rotation.set(0.13, -2, 0);
         group.scale.setScalar(1.2);
-      } else {
-        const chrome = new THREE.MeshStandardMaterial({
-          color: 0xb7ab98,
-          metalness: 0.95,
-          roughness: 0.17,
-        });
-        const knot = mesh(
-          new THREE.TorusKnotGeometry(1, 0.29, 160, 28, 2, 3),
-          chrome,
-        );
-        group.add(knot);
-        const orange = mesh(
-          new THREE.TorusGeometry(1.7, 0.06, 16, 100),
-          new THREE.MeshStandardMaterial({
-            color: 0xeb5939,
-            roughness: 0.32,
-            metalness: 0.4,
-          }),
-        );
-        orange.rotation.set(0.5, 0.8, 0);
-        group.add(orange);
-        group.position.x = 0.9;
-        camera.position.z = 6.5;
       }
       return { scene, camera, group, type };
     };
@@ -157,8 +134,7 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
     // cannot obey section stacking or clipping and used to obscure the work.
     const makeView = (element: HTMLElement) => {
       const canvas = document.createElement("canvas");
-      canvas.className =
-        element.dataset.threeScene === "reel" ? "reel-canvas" : "object-canvas";
+      canvas.className = "object-canvas";
       canvas.setAttribute("aria-hidden", "true");
       element.appendChild(canvas);
       let renderer: THREE.WebGLRenderer;
@@ -206,7 +182,6 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
           environmentTarget,
           created: true,
           smoothProgress: -1,
-          reelProgress: -1,
           width: 0,
           height: 0,
           lost,
@@ -259,7 +234,7 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
         )
           return;
         const parent = view.element.closest(
-          ".about-studio,.selected-work,.showreel",
+          ".about-studio,.selected-work",
         ) as HTMLElement | null;
         const pr = parent?.getBoundingClientRect();
         const targetProgress = pr
@@ -296,23 +271,6 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
             -2 + progress * 1.2 + (reduced ? 0 : time * 0.000015);
           view.group.rotation.x = 0.13;
         }
-        if (view.type === "reel") {
-          const container = view.element.closest(".reel-window") as HTMLElement;
-          const targetReel = parseFloat(
-            container?.style.getPropertyValue("--reel-progress") || "0",
-          );
-          view.reelProgress =
-            view.reelProgress < 0 || reduced
-              ? targetReel
-              : THREE.MathUtils.lerp(view.reelProgress, targetReel, damping);
-          const p = view.reelProgress;
-          view.group.rotation.set(
-            p * Math.PI * 2,
-            p * Math.PI * 4,
-            p * Math.PI,
-          );
-          view.group.position.y = reduced ? 0 : Math.sin(p * Math.PI * 6) * 0.2;
-        }
         const width = Math.max(1, Math.round(rect.width));
         const viewHeight = Math.max(1, Math.round(rect.height));
         if (view.width !== width || view.height !== viewHeight) {
@@ -320,7 +278,7 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
           view.width = width;
           view.height = viewHeight;
           view.camera.aspect = width / viewHeight;
-          if (view.type !== "reel") {
+          {
             const radius = view.type === "globe" ? 1.86 : 1.7;
             const vertical = THREE.MathUtils.degToRad(view.camera.fov / 2);
             const limitingAngle = Math.atan(
@@ -329,10 +287,6 @@ export default function VisualScenes({ enabled }: { enabled: boolean }) {
             view.camera.position.z = (radius / Math.sin(limitingAngle)) * 1.12;
           }
           view.camera.updateProjectionMatrix();
-        }
-        if (view.type === "reel") {
-          view.group.scale.setScalar(rect.width < 768 ? 0.72 : 1);
-          view.group.position.x = rect.width < 768 ? 0.5 : 0.9;
         }
         view.renderer.render(view.scene, view.camera);
       });

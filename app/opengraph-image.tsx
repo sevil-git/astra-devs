@@ -10,7 +10,7 @@ export const contentType = "image/png";
 const font = await readFile(
   join(
     process.cwd(),
-    "node_modules/@fontsource/urbanist/files/urbanist-latin-700-normal.woff",
+    "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff",
   ),
 );
 
@@ -27,7 +27,7 @@ export default function OpenGraphImage() {
           background: "#0d0d0d",
           color: "#b7ab98",
           padding: "54px 64px",
-          fontFamily: "Urbanist",
+          fontFamily: "Space Grotesk",
         }}
       >
         <div
@@ -71,7 +71,7 @@ export default function OpenGraphImage() {
     ),
     {
       ...size,
-      fonts: [{ name: "Urbanist", data: font, weight: 700, style: "normal" }],
+      fonts: [{ name: "Space Grotesk", data: font, weight: 700, style: "normal" }],
     },
   );
 }

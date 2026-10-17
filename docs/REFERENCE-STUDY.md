@@ -59,3 +59,21 @@ Production build and TypeScript checks are run after changes. Browser checks cov
 A focused inspection of the reference HTML found `assets/images/logo.gif` on the entry screen and `assets/icons/logo.svg` in the header. Its public header script applies a smoothed pointer translation around the pointer, while CSS changes its fill on hover. These are static-source observations; a browser screenshot corroborated the entry mark's appearance. No reference logo asset was copied.
 
 Astra devs now uses an original SVG A character with a small visor and orange spark. The entry mark greets and blinks for 4.8 seconds. Active marks look toward the pointer, lean as it approaches, wink on hover or keyboard focus, and spring on press/tap. The header retains its home-link behavior. Inactive marks have no pointer listener; decorative thumbnails remain static. Reduced-motion preferences disable all logo animation and tracking. The favicon uses the same static artwork.
+
+## Focused project-index revisit
+
+Revisited the live reference’s Clients list on October 17, 2026, alongside the retained static HTML/CSS. Runtime observation confirmed oversized uppercase names, fine horizontal separators, and an orange band that reveals a short description when the name is hovered. The retained CSS uses a centre-out `clip-path: inset(50% 0 50% 0)` wipe, with approximately 400ms exit / 600ms entry and `cubic-bezier(.165,.84,.44,1)`. The nearby globe is a separate decorative scene. This live observation supplements, rather than extends the scope of, the earlier REA Evidence ID.
+
+Astra’s project section now adopts the full-width typographic index and centre-out orange reveal. The project names, supplied screenshots, copy, and direct live-site links remain Astra’s. Each default row keeps a real preview and a concise headline visible; the orange desktop hover/focus view swaps the preview for a longer description. Keyboard focus receives the same treatment. Narrow layouts show names, previews, and summaries directly, with no hover gate, selection tabs, or case-study popup. The reference’s large foreground globe is not added to the project list.
+
+## Selected architectural direction
+
+On October 17, 2026 the agency owner selected the Unseen Studio direction from four reviewed alternatives. Live inspection of [Unseen Studio](https://unseen.co/) showed a softly lit architectural environment, water reflections, centered mixed serif/sans typography, restrained navigation, and an immediate work link. Its [Awwwards entry](https://www.awwwards.com/sites/unseen-studio) documents the spatial/interactive direction. The current live site may differ from the awarded version.
+
+Astra's resulting scene, The Threshold, uses original generated artwork of a circular limestone portal with a warm horizon and shallow pool. It uses a separate portrait composition, a left-aligned desktop headline, and Astra's own software services and work. Scene assets and code were not copied from Unseen. The hero retains the pointer-following text reveal, using a warm copper circle and an aligned alternate headline (“A little less ordinary.”). This combines the selected architectural direction with the two-layer text behavior the owner requested preserving. The established reveal interactions elsewhere in the portfolio remain.
+
+## Architectural direction across the studio
+
+The owner's next pass extends the selected spatial/editorial direction through the full page. The former centre-out project list is superseded by three open gallery chapters: large supplied screenshots on softly lit CSS surfaces, alternating desktop compositions, serif supporting headlines, visible descriptions, and direct links. Mobile stacks each image and its information in normal reading order. The portfolio's two-layer text behavior is retained in the hero, studio statements, principles, closing statement, and project descriptions. Screenshot links and controls suppress the lens.
+
+Chapter dividers draw in as their sections arrive; media and supporting copy have short, once-only entrances. Existing letter/line reveals remain. No section is pinned and phone scrolling remains native. All scenes use existing original artwork or genuine supplied project captures; the floating desk objects and former eye treatment are retired.

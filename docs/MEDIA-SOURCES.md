@@ -1,12 +1,22 @@
 # Astra devs media sources
 
-## Background video
+## Active background: The Threshold
 
-- File: `public/videos/studio-work.mp4` (1280 × 720, H.264, about 8 seconds, 2.62 MB).
-- Poster: `public/images/studio-work-poster.jpg`.
-- Source: [Hands of a programmer working on a desk](https://mixkit.co/free-stock-video/hands-of-a-programmer-working-on-a-desk-41652/), Mixkit item 41652.
-- [Mixkit Stock Video Free License](https://mixkit.co/license/#videoFree). The source item explicitly permits commercial and personal use under this license. Retrieved October 17, 2026.
-- Local delivery avoids third-party video embeds. The clip is stock footage, not a representation of the actual agency team. CSS applies monochrome treatment and a dark overlay. Playback begins after Start, loops silently, pauses when offscreen or in a hidden tab, and has a user pause control. Reduced-motion users receive the poster.
+Original architectural artwork generated October 17, 2026 with the built-in `image_gen__imagegen` tool, inspired by the immersive architectural direction selected by the agency owner. No Unseen Studio imagery, models, textures, or code have been copied. Full production prompts are recorded in `ASSET-PROMPTS.md`.
+
+- `public/images/threshold/threshold-desktop-source.png`: original landscape artwork, 1672 × 941.
+- `public/images/threshold/threshold-mobile-source.png`: separately generated portrait composition, 941 × 1672.
+- `public/images/threshold/threshold-desktop.webp`: served landscape derivative, 1672 × 941, 136,198 bytes.
+- `public/images/threshold/threshold-mobile.webp`: served portrait derivative, 900 × 1601, 117,420 bytes.
+- WebP conversion uses the local Sharp dependency. The `<picture>` and matching texture choose the applicable viewport asset; originals are retained for provenance and are not requested by the page.
+
+The background uses a lightweight 2.5D image shader for slow camera breathing, fine-pointer parallax and tiny distortions restricted to the foreground pool. It is a composed environment with ambient animation, not real-time architectural geometry or a navigable 3D scene. The artwork remains visible when WebGL is unavailable, on context loss, or under reduced motion. Live preference changes are observed. Phones use a 30fps scheduling target and 1.25 pixel-ratio cap; no physical-device frame-rate claim is made. Motion pauses offscreen, in hidden tabs, or through the visitor control. No background video is used.
+
+The rejected ribbon component and its stylesheet have been replaced. Earlier procedural and stock background revisions are historical.
+
+### Retired stock assets
+
+The former `public/videos/studio-sculpture.mp4` and `public/images/studio-sculpture-poster.jpg` are no longer referenced by the page. Source: [Abstract Floating Metal Sphere](https://www.pexels.com/video/abstract-floating-metal-sphere-37859039/) by [Rostislav Uzunov](https://www.pexels.com/@rostislav/), Pexels item 37859039, under the [Pexels license](https://www.pexels.com/license/). Retrieved October 17, 2026 and edited locally. Earlier desk footage is also unused. Both remain in the repository for provenance.
 
 ## Project previews
 
@@ -16,11 +26,11 @@ Homepage screenshots captured October 17, 2026 from the project URLs supplied by
 - `public/images/projects/maestera.png`: [Maestera](https://maestera.com/), music teacher discovery and education.
 - `public/images/projects/nimbus.png`: [Nimbus](https://nimbus-keyboard.vercel.app/), an interactive 3D keyboard product website.
 
-Descriptions reflect observable public features. No unverified metrics, results, technology stacks, or client testimonials have been added. Each project opens a preview dialog and links to its live website in a new tab.
+Descriptions reflect observable public features. No unverified metrics, results, technology stacks, or client testimonials have been added. All three projects display directly in the page and link to their live websites in a new tab.
 
 ## Other assets
 
-The closing eye is original generated imagery; see `ASSET-PROMPTS.md`. Three.js objects are procedural original artwork. The project showcase combines that artwork with the supplied project screenshots listed above.
+The closing section now reprises the original Threshold artwork. The former eye image and procedural coffee/mouse objects remain archived in source, but are not loaded by the page. The project gallery uses the supplied homepage screenshots listed above, staged entirely with CSS; no fake client work or outcomes were added.
 
 ## Art-direction pass
 
@@ -29,3 +39,17 @@ Additional live-page captures were taken from Zeltic’s product-story section, 
 The globe now uses coastline polygons from [Natural Earth’s 1:110m land dataset](https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_land.geojson), rasterised locally into a custom 2048 × 1024 atlas with a subtle graticule. [Natural Earth terms](https://www.naturalearthdata.com/about/terms-of-use/) place this map data in the public domain. The rendered atlas is `public/textures/earth.png`. Retrieved October 17, 2026.
 
 The closing image’s served derivative is `public/images/studio-eye.webp`. Its original generated PNG and prompt remain available.
+
+## Desktop project films — October 17, 2026
+
+The gallery now serves three silent H.264 MP4 films at **1920 × 1080, 24 fps**, with fast-start metadata. These are edited previews of the actual supplied projects, not invented product interfaces. The full 16:9 composition remains contained within the gallery on mobile.
+
+- `public/videos/projects/zeltic-desktop.mp4`: live Zeltic desktop opening followed by the project's original 1920 × 1080 product animation, [watermelon.webm](https://zeltic-turbo-zeltic-frontend-nine.vercel.app/videos/watermelon.webm?v6), and a dissolve back to the opening. The downloaded original is retained as `zeltic-product.webm`.
+- `public/videos/projects/nimbus-desktop.mp4`: live Nimbus 3D opening, followed by actual Dreamboard and Cherry Navy keycap states. Recorded from a fixed desktop iframe, not a narrow in-app panel. Screenshot sequences were retimed and interpolated during editing; this is not a claim of a native 24 fps screen recording.
+- `public/videos/projects/maestera-desktop.mp4`: a concise editorial walkthrough using the live homepage carousel and genuine captured teacher-discovery and filter views. The discovery views are edited stills with dissolves; no fabricated interactions or teacher data were added.
+
+The corresponding `*-film.webp` images are compressed desktop posters from the same captures. Playback starts only when a film is sufficiently visible, pauses offscreen and when the document is hidden, and respects reduced-motion and data-saving preferences. A separate accessible play/pause button allows explicit playback. Failed or blocked autoplay keeps the poster available. The mirrored text-reveal layer uses posters only, avoiding duplicate video decoding.
+
+### Typography
+
+Locally hosted **Space Grotesk** (display) and **Manrope** (supporting text), Latin subsets, upright weights only. Fontsource packages carry the SIL Open Font License 1.1: [Space Grotesk](https://fontsource.org/fonts/space-grotesk), [Manrope](https://fontsource.org/fonts/manrope). No external font requests. Georgia, serif italics, and Urbanist references were removed from the rendered page and the Open Graph artwork.

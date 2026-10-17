@@ -6,7 +6,7 @@
   --edge: 1.25rem;
   --ease: cubic-bezier(0.165, 0.84, 0.44, 1);
   color-scheme: dark;
-  font-family: "Urbanist", Arial, Helvetica, sans-serif;
+  font-family: "Space Grotesk", sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 1.1;
@@ -499,7 +499,7 @@ button:disabled {
   letter-spacing: -0.05em;
 }
 .row-reveal-content p {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Helvetica, sans-serif;
   font-weight: 500;
   font-size: 1rem;
   line-height: 1.45;
@@ -617,7 +617,7 @@ button:disabled {
   padding-bottom: clamp(100px, 17vh, 160px);
 }
 .work-disclosure {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Helvetica, sans-serif;
   font-size: 0.625rem;
   line-height: 1.7;
   letter-spacing: 0.17em;
@@ -642,7 +642,7 @@ button:disabled {
   gap: 1rem;
 }
 .project-row-type {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Helvetica, sans-serif;
   font-size: 0.8rem;
   line-height: 1.3;
   color: #b7ab9890;
@@ -724,7 +724,7 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   z-index: 3;
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.65rem;
   letter-spacing: 0.2em;
 }
@@ -798,7 +798,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.7rem;
 }
 .reel-controls button {
@@ -806,7 +806,7 @@ button:disabled {
   place-items: center;
   width: 2rem;
   height: 2rem;
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 1.2rem;
 }
 .reel-controls input {
@@ -884,7 +884,7 @@ button:disabled {
 }
 .principle-signature span {
   display: block;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Helvetica, sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -1048,7 +1048,7 @@ button:disabled {
   margin: 9rem auto 0;
   font-size: 0.55rem;
   letter-spacing: 0.16em;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Helvetica, sans-serif;
   opacity: 0.4;
   display: flex;
   justify-content: space-between;
@@ -1212,7 +1212,7 @@ button:disabled {
   right: 1.5rem;
   top: 1.5rem;
   z-index: 10;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Helvetica, sans-serif;
   font-size: 10px;
   letter-spacing: 0.1em;
   background: #0d0d0dde;
@@ -1254,14 +1254,14 @@ button:disabled {
   color: var(--orange);
 }
 .case-copy > p:not(.section-label) {
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 1rem;
   line-height: 1.8;
   max-width: 40rem;
   margin: 1.8rem 0;
 }
 .case-tags {
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.8rem;
   color: var(--orange);
 }
@@ -1276,7 +1276,7 @@ button:disabled {
   gap: 3rem;
   padding: 1rem 0;
   border-bottom: 1px solid #b7ab9860;
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.75rem;
   line-height: 1.4;
   letter-spacing: 0.07em;
@@ -1307,7 +1307,7 @@ button:disabled {
   color: var(--orange);
 }
 .enquiry-intro {
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.7;
@@ -1320,7 +1320,7 @@ button:disabled {
   gap: 2rem;
 }
 .enquiry-dialog label {
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
   display: flex;
@@ -1337,7 +1337,7 @@ button:disabled {
   border-bottom: 1px solid #b7ab9850;
   background: transparent;
   color: var(--foreground);
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.6;
@@ -1355,7 +1355,7 @@ button:disabled {
   background: var(--orange);
   color: #0d0d0d;
   padding: 1.15rem 1.5rem;
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   font-weight: 700;
@@ -1369,7 +1369,7 @@ button:disabled {
   margin-top: 0.5rem;
 }
 .form-note {
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.65rem;
   line-height: 1.7;
   opacity: 0.55;
@@ -1378,7 +1378,7 @@ button:disabled {
 .brief-preview {
   padding: 1.5rem;
   border: 1px solid #b7ab9840;
-  font-family: Arial, sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   line-height: 1.8;
@@ -2167,7 +2167,7 @@ body:has(.reel-expanded) {
 }
 
 /* Real work and the studio background film. */
-.hero-background .background-motion-toggle {
+.portrait-hero > .background-motion-toggle {
   position: absolute;
   z-index: 4;
   bottom: 3vh;
@@ -2181,12 +2181,12 @@ body:has(.reel-expanded) {
   background: #0d0d0d55;
   color: #b7ab98;
   font:
-    9px Arial,
+    9px "Manrope",
     sans-serif;
   letter-spacing: 0.14em;
   white-space: nowrap;
 }
-.hero-background .background-motion-toggle:hover {
+.portrait-hero > .background-motion-toggle:hover {
   border-color: var(--orange);
   color: var(--orange);
 }
@@ -2209,7 +2209,7 @@ body:has(.reel-expanded) {
   padding: 0.8rem 1rem;
   border-radius: 2rem;
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   letter-spacing: 0.08em;
   background: #0d0d0de8;
@@ -2226,13 +2226,13 @@ body:has(.reel-expanded) {
   display: block;
   margin-top: 1rem;
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   opacity: 0.5;
   overflow-wrap: anywhere;
 }
 @media (max-width: 767px) {
-  .hero-background .background-motion-toggle {
+  .portrait-hero > .background-motion-toggle {
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
@@ -2420,7 +2420,7 @@ body:has(.reel-expanded) {
 }
 .project-number {
   font:
-    11px Arial,
+    11px "Manrope",
     sans-serif;
   letter-spacing: 0.12em;
   color: #b7ab9899;
@@ -2737,7 +2737,7 @@ body:has(.reel-expanded) {
   padding: 10px 14px;
   background: #292823;
   font:
-    9px Arial,
+    9px "Manrope",
     sans-serif;
   letter-spacing: 0.08em;
   color: #b7ab98bb;
@@ -2760,7 +2760,7 @@ body:has(.reel-expanded) {
   border-radius: 30px;
   background: #0d0d0da0;
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   letter-spacing: 0.1em;
 }
@@ -2911,7 +2911,7 @@ body:has(.reel-expanded) {
   .service-toggle {
     display: block;
     font:
-      20px Arial,
+      20px "Manrope",
       sans-serif;
     opacity: 0.65;
     flex-shrink: 0;
@@ -2926,7 +2926,7 @@ body:has(.reel-expanded) {
   }
 }
 @media (min-width: 768px) and (max-width: 1199.98px) {
-  .hero-background .background-motion-toggle {
+  .portrait-hero > .background-motion-toggle {
     bottom: 7rem;
   }
   .capability-row .oversize-heading,

@@ -3,7 +3,7 @@
   display: block;
   margin-top: 14px;
   font:
-    9px Arial,
+    9px "Manrope",
     sans-serif;
   letter-spacing: 0.2em;
   opacity: 0.65;
@@ -59,7 +59,7 @@
 }
 .gallery-tab-number {
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   letter-spacing: 0.06em;
   opacity: 0.6;
@@ -119,7 +119,7 @@
   justify-content: space-between;
   gap: 20px;
   font:
-    9px Arial,
+    9px "Manrope",
     sans-serif;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -150,7 +150,7 @@
   background: #f0ede6;
   color: #28282380;
   font:
-    8px Arial,
+    8px "Manrope",
     sans-serif;
   letter-spacing: 0.05em;
 }
@@ -176,14 +176,14 @@
   color: #ded6c7;
   border-radius: 30px;
   font:
-    9px Arial,
+    9px "Manrope",
     sans-serif;
   letter-spacing: 0.1em;
   transition: gap 0.3s;
 }
 .gallery-open > span {
   font:
-    18px Arial,
+    18px "Manrope",
     sans-serif;
 }
 .gallery-stage:hover .gallery-open {
@@ -197,7 +197,7 @@
 }
 .gallery-caption-type {
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -212,7 +212,7 @@
 }
 .gallery-caption p {
   font:
-    14px/1.7 Arial,
+    14px/1.7 "Manrope",
     sans-serif;
   color: #b7ab98c4;
   max-width: 50ch;
@@ -258,7 +258,7 @@
 }
 .case-features > div > span {
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   color: var(--orange);
 }
@@ -270,7 +270,7 @@
 }
 .case-features p {
   font:
-    13px/1.7 Arial,
+    13px/1.7 "Manrope",
     sans-serif;
   color: #b7ab98b3;
 }
@@ -286,7 +286,7 @@
 }
 .case-detail-media figcaption {
   font:
-    11px/1.6 Arial,
+    11px/1.6 "Manrope",
     sans-serif;
   text-align: center;
   margin-top: 20px;
@@ -297,7 +297,7 @@
 }
 .case-next-project > span {
   font:
-    10px Arial,
+    10px "Manrope",
     sans-serif;
   letter-spacing: 0.13em;
   color: #b7ab9880;
@@ -356,7 +356,7 @@
 }
 .contact-invitation > p {
   font:
-    14px/1.7 Arial,
+    14px/1.7 "Manrope",
     sans-serif;
   max-width: 30ch;
   color: #b7ab98a8;
@@ -516,7 +516,7 @@
 }
 .intro-brand > span:last-child {
   font:
-    11px Arial,
+    11px "Manrope",
     sans-serif;
   letter-spacing: 0.35em;
   padding-left: 0.35em;
@@ -565,7 +565,7 @@
     background: #0d0d0ded;
     color: var(--foreground);
     font:
-      9px Arial,
+      9px "Manrope",
       sans-serif;
     letter-spacing: 0.04em;
   }
@@ -584,7 +584,7 @@
     color: #0d0d0d;
     border-color: #0d0d0d40;
   }
-  .hero-background .background-motion-toggle {
+  .portrait-hero > .background-motion-toggle {
     bottom: 100px;
   }
   .hero-scroll {
@@ -624,7 +624,7 @@
   }
   .fixed-navigation .roll-link {
     font:
-      11px/1.4 Arial,
+      11px/1.4 "Manrope",
       sans-serif;
     padding: 4px 0;
     letter-spacing: 0.03em;

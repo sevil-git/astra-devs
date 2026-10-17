@@ -8,6 +8,8 @@ export const projects = [
     secret: "A fresh take on hydration. Built to make a splash.",
     tags: "E-commerce · Product storytelling · Interactive website",
     image: "/images/projects/zeltic.png",
+    film: "/videos/projects/zeltic-desktop.mp4",
+    poster: "/images/projects/zeltic-film.webp",
     detailImage: "/images/projects/zeltic-detail.png",
     detailCaption:
       "Flavour, colour, and product storytelling in one visual language.",
@@ -38,6 +40,8 @@ export const projects = [
     secret: "Helping the next great musician find their first teacher.",
     tags: "Web platform · Teacher discovery · Music education",
     image: "/images/projects/maestera.png",
+    film: "/videos/projects/maestera-desktop.mp4",
+    poster: "/images/projects/maestera-film.webp",
     detailImage: "/images/projects/maestera-detail.png",
     detailCaption:
       "Teacher discovery puts the people behind the music front and centre.",
@@ -68,6 +72,8 @@ export const projects = [
     secret: "A keyboard you can almost feel through the screen.",
     tags: "3D product experience · Interactive customisation · Creative development",
     image: "/images/projects/nimbus.png",
+    film: "/videos/projects/nimbus-desktop.mp4",
+    poster: "/images/projects/nimbus-film.webp",
     detailImage: "/images/projects/nimbus-detail.png",
     detailCaption:
       "The Vapor75 becomes the centre of an immersive product experience.",

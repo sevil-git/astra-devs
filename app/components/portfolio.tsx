@@ -5,12 +5,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import dynamic from "next/dynamic";
-import WorkGallery from "./work-gallery";
-import { projects } from "../data/projects";
-const VisualScenes = dynamic(() => import("./visual-scenes"), { ssr: false });
+import WorkShowcase from "./work-showcase";
+const ArchitecturalScene = dynamic(() => import("./architectural-scene"), {
+  ssr: false,
+});
 import Enquiry from "./enquiry";
 import BrandMark from "./brand-mark";
-import { useDialogMotion, useMotionSettings } from "./motion";
+import { useMotionSettings } from "./motion";
 
 const services = [
   {
@@ -206,340 +207,21 @@ function RollLink({
     </button>
   );
 }
-function Reel({ mirror = false }: { mirror?: boolean }) {
-  const [playing, setPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [full, setFull] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  const playhead = useRef(0);
-  const status = useRef(playing);
-  const pointerRef = useRef({ x: 50, y: 50 });
-  useEffect(() => {
-    status.current = playing;
-  }, [playing]);
-  useEffect(() => {
-    if (mirror) return;
-    let frame = 0;
-    let last = performance.now();
-    let lastPaint = 0;
-    const run = (now: number) => {
-      if (
-        status.current &&
-        ref.current &&
-        ref.current.getBoundingClientRect().bottom > 0 &&
-        ref.current.getBoundingClientRect().top < innerHeight &&
-        !document.hidden
-      ) {
-        playhead.current =
-          (playhead.current + Math.min(now - last, 100) / 18000) % 1;
-        ref.current.style.setProperty(
-          "--reel-progress",
-          String(playhead.current),
-        );
-        if (now - lastPaint > 150) {
-          setProgress(playhead.current);
-          lastPaint = now;
-        }
-      }
-      last = now;
-      frame = requestAnimationFrame(run);
-    };
-    frame = requestAnimationFrame(run);
-    return () => cancelAnimationFrame(frame);
-  }, [mirror]);
-  useEffect(() => {
-    const change = () => setFull(!!document.fullscreenElement);
-    document.addEventListener("fullscreenchange", change);
-    return () => document.removeEventListener("fullscreenchange", change);
-  }, []);
-  useEffect(() => {
-    const preference = matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => {
-      if (preference.matches) setPlaying(false);
-    };
-    update();
-    preference.addEventListener("change", update);
-    return () => preference.removeEventListener("change", update);
-  }, []);
-  useEffect(() => {
-    const exitFallback = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      if (document.fullscreenElement === ref.current) {
-        void document.exitFullscreen().catch(() => {});
-      } else if (ref.current?.classList.contains("reel-expanded")) {
-        ref.current.classList.remove("reel-expanded");
-        setFull(false);
-      }
-    };
-    document.addEventListener("keydown", exitFallback);
-    return () => document.removeEventListener("keydown", exitFallback);
-  }, []);
-  const chapter = Math.min(2, Math.floor(progress * 3));
-  return (
-    <section className="showreel" data-reel-section>
-      <div
-        className={`reel-window ${playing ? "is-playing" : ""}`}
-        ref={ref}
-        data-playing={playing}
-        data-lenis-prevent={full ? "" : undefined}
-        style={{ "--reel-progress": progress } as React.CSSProperties}
-        onPointerMove={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          pointerRef.current = {
-            x: ((e.clientX - r.left) / r.width) * 100,
-            y: ((e.clientY - r.top) / r.height) * 100,
-          };
-          e.currentTarget.style.setProperty(
-            "--reel-x",
-            `${pointerRef.current.x}%`,
-          );
-          e.currentTarget.style.setProperty(
-            "--reel-y",
-            `${pointerRef.current.y}%`,
-          );
-        }}
-      >
-        {!mirror && <div className="reel-scene" data-three-scene="reel" />}
-        <div className="reel-grid" />
-        {!mirror &&
-          projects.map((project, index) => (
-            <div
-              className={`reel-project-preview ${chapter === index ? "is-active" : ""}`}
-              key={project.name}
-              aria-hidden="true"
-            >
-              <div className="reel-browser-bar">
-                <span>● ● ●</span>
-                <span>{project.name.toLowerCase()}. / live experience</span>
-                <Arrow diagonal />
-              </div>
-              <img
-                src={project.image}
-                alt=""
-                width="1265"
-                height="712"
-                loading="lazy"
-              />
-            </div>
-          ))}
-        <div className="reel-caption">
-          <span>ASTRA DEVS — SELECTED WORK</span>
-          <span>0{chapter + 1} / 03</span>
-        </div>
-        <div className="reel-stage">
-          <span className="reel-kicker">
-            {mirror
-              ? "A LITTLE LESS TALK."
-              : projects[chapter].type.toUpperCase()}
-          </span>
-          <div className="reel-title" data-chapter={chapter} key={chapter}>
-            {mirror ? (
-              <>
-                A LOT
-                <br />
-                MORE
-                <br />
-                DOING.
-              </>
-            ) : (
-              <>
-                {projects[chapter].name.toUpperCase()}.
-                <br />
-                <span>IN</span>
-                <br />
-                FOCUS.
-              </>
-            )}
-          </div>
-        </div>
-        <button
-          className="reel-play-target"
-          onClick={() => setPlaying(!playing)}
-          aria-label={playing ? "Pause motion reel" : "Play motion reel"}
-          data-mask="hide"
-        >
-          <span className="reel-follow">
-            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-              {playing ? (
-                <path fill="currentColor" d="M5 3h3v14H5zm7 0h3v14h-3z" />
-              ) : (
-                <path fill="currentColor" d="m5 2 13 8L5 18z" />
-              )}
-            </svg>
-            <span>{playing ? "PAUSE REEL" : "PLAY REEL"}</span>
-          </span>
-        </button>
-        {!mirror && (
-          <a
-            className="reel-project-link"
-            href={projects[chapter].url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            VISIT {projects[chapter].name.toUpperCase()} <Arrow diagonal />
-          </a>
-        )}
-        <div className="reel-controls" data-mask="hide">
-          <button
-            onClick={() => setPlaying(!playing)}
-            aria-label={playing ? "Pause reel" : "Play reel"}
-          >
-            {playing ? "Ⅱ" : "▷"}
-          </button>
-          <span className="reel-time">
-            00:{String(Math.floor(progress * 18)).padStart(2, "0")}
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="1000"
-            value={Math.floor(progress * 1000)}
-            onChange={(e) => {
-              playhead.current = Number(e.target.value) / 1000;
-              setProgress(playhead.current);
-            }}
-            aria-label="Reel progress"
-          />
-          <span>00:18</span>
-          <button
-            onClick={async () => {
-              try {
-                if (document.fullscreenElement) await document.exitFullscreen();
-                else await ref.current?.requestFullscreen();
-              } catch {
-                setFull(!full);
-                ref.current?.classList.toggle("reel-expanded");
-              }
-            }}
-            aria-label={full ? "Exit fullscreen" : "Expand reel"}
-          >
-            ⤢
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
-function ProjectPreview({ project }: { project: (typeof projects)[number] }) {
-  return (
-    <a
-      className="case-art"
-      href={project.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`Visit ${project.name} live website (opens a new tab)`}
-    >
-      <img
-        src={project.image}
-        alt={`${project.name} website preview`}
-        width="1265"
-        height="712"
-      />
-      <span className="case-visit">
-        VIEW LIVE WEBSITE <Arrow diagonal />
-      </span>
-    </a>
-  );
-}
-
-function HeroVideo({ enabled }: { enabled: boolean }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [paused, setPaused] = useState(false);
-  const [reduced, setReduced] = useState(false);
-  const [failed, setFailed] = useState(false);
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReduced(media.matches);
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, []);
-  useEffect(() => {
-    videoRef.current?.load();
-  }, [enabled, reduced, failed]);
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    let visible = false;
-    const update = () => {
-      if (
-        enabled &&
-        visible &&
-        !paused &&
-        !reduced &&
-        !document.hidden &&
-        !failed
-      ) {
-        void video.play().catch(() => setPaused(true));
-      } else video.pause();
-    };
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      update();
-    });
-    observer.observe(video);
-    document.addEventListener("visibilitychange", update);
-    update();
-    return () => {
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", update);
-      video.pause();
-    };
-  }, [enabled, paused, reduced, failed]);
-  return (
-    <>
-      <video
-        ref={videoRef}
-        className="studio-video"
-        poster="/images/studio-work-poster.jpg"
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-hidden="true"
-        onError={() => setFailed(true)}
-      >
-        {enabled && !reduced && !failed && (
-          <source src="/videos/studio-work.mp4" type="video/mp4" />
-        )}
-      </video>
-      {!reduced && !failed && (
-        <button
-          className="background-motion-toggle"
-          onClick={() => setPaused(!paused)}
-          aria-label={
-            paused ? "Play background video" : "Pause background video"
-          }
-          aria-pressed={!paused}
-        >
-          <span aria-hidden="true">{paused ? "▶" : "Ⅱ"}</span> BACKGROUND
-          MOTION {paused ? "OFF" : "ON"}
-        </button>
-      )}
-    </>
-  );
-}
 
 function PageLayer({
   mirror,
   entered,
   activePrinciple,
-  onProject,
   onEnquiry,
   openService,
   onService,
-  activeWork,
-  onWork,
 }: {
   mirror: boolean;
   entered: boolean;
   activePrinciple: number;
-  onProject: (index: number) => void;
   onEnquiry: () => void;
   openService: number | null;
   onService: (index: number | null) => void;
-  activeWork: number;
-  onWork: (index: number) => void;
 }) {
   return (
     <>
@@ -547,47 +229,71 @@ function PageLayer({
         id={!mirror ? "about" : undefined}
         data-section={!mirror ? "about" : undefined}
       >
-        <section className="portrait-hero">
-          <div className="hero-background parallax-media" data-parallax="0.5">
-            {!mirror && <HeroVideo enabled={entered} />}
-            <div className="portrait-shade" />
-          </div>
+        <section className="portrait-hero portal-hero">
+          {!mirror && entered && <ArchitecturalScene />}
           <div className="hero-center" data-mask="expand">
             <p className="hero-name">
-              <Characters text="ASTRA DEVS" />
+              <span className="hero-eyebrow-rule" aria-hidden="true" />
+              <span>ASTRA DEVS</span>
               <span className="hero-descriptor">
                 INDEPENDENT SOFTWARE STUDIO
               </span>
             </p>
             <h1
               className="hero-heading"
-              aria-label={mirror ? undefined : "Making good code for people"}
+              aria-label={mirror ? undefined : "Ideas into experiences."}
             >
               {(mirror
-                ? ["TURNING", "BIG", "IDEAS", "INTO", "REALITY"]
-                : ["MAKING", "GOOD", "CODE", "FOR", "PEOPLE"]
+                ? ["A little less", "ordinary."]
+                : ["Ideas into", "experiences."]
               ).map((line, i) => (
                 <span
-                  className={`hero-line ${i === 1 || i === 2 ? "orange" : ""}`}
-                  key={i}
+                  className={`hero-line ${i === 0 ? "hero-opening" : ""}`}
+                  key={line}
                   aria-hidden="true"
                 >
                   <Characters text={line} />
                 </span>
               ))}
             </h1>
+            <p className="hero-introduction">
+              {mirror
+                ? "A little curiosity. A lot of care."
+                : "Websites, apps & automations."}
+              <br />
+              {mirror
+                ? "Good ideas deserve a different perspective."
+                : "Thoughtfully designed. Beautifully built."}
+            </p>
+            <a
+              className="hero-work-link"
+              href="#work"
+              tabIndex={mirror ? -1 : undefined}
+            >
+              <span>Explore our work</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
+          <span className="hero-reveal-hint" aria-hidden="true">
+            {mirror ? "A LITTLE LESS ORDINARY." : "HOVER TO SEE ANOTHER SIDE"}
+          </span>
+          <span className="hero-scene-note" aria-hidden="true">
+            A NEW PERSPECTIVE.
+          </span>
           <a
             className="hero-scroll"
             href="#studio"
+            tabIndex={mirror ? -1 : undefined}
             aria-label="Scroll to about the studio"
           >
-            ↓
+            <span>SCROLL TO EXPLORE</span>
+            <span aria-hidden="true">↓</span>
           </a>
         </section>
         <section className="about-studio" id={!mirror ? "studio" : undefined}>
           <div className="copy-container about-intro">
-            <Label>ABOUT THE STUDIO</Label>
+            <div className="chapter-rule" aria-hidden="true" />
+            <Label>01 / THE STUDIO</Label>
             <ScrollText
               mirror={mirror}
               lines={[
@@ -598,26 +304,14 @@ function PageLayer({
               ]}
               secret={[
                 "A small team. Big ideas.",
-                "Probably too much coffee.",
-                "Definitely too much care",
-                "to make ordinary stuff.",
+                "Curiosity in the details.",
+                "Care in every decision,",
+                "and code with purpose.",
               ]}
               accent={["websites", "apps", "automations"]}
             />
           </div>
           <div className="capabilities" id={!mirror ? "services" : undefined}>
-            {!mirror && (
-              <>
-                <div
-                  className="floating-object coffee-object"
-                  data-three-scene="coffee"
-                />
-                <div
-                  className="floating-object mouse-object"
-                  data-three-scene="mouse"
-                />
-              </>
-            )}
             <div className="copy-container">
               <Label>WHAT WE DO</Label>
             </div>
@@ -669,19 +363,10 @@ function PageLayer({
           className="experience-section"
           id={!mirror ? "approach" : undefined}
         >
-          <div className="work-background parallax-media" data-parallax="0.35">
-            {!mirror && (
-              <img
-                src="/images/studio-work-poster.jpg"
-                alt=""
-                width="1280"
-                height="720"
-                loading="lazy"
-              />
-            )}
-          </div>
+          <div className="work-background portal-echo" aria-hidden="true" />
           <div className="copy-container experience-intro">
-            <Label>THE WAY WE WORK</Label>
+            <div className="chapter-rule" aria-hidden="true" />
+            <Label>02 / THE PROCESS</Label>
             <ScrollText
               mirror={mirror}
               lines={[
@@ -729,40 +414,26 @@ function PageLayer({
         </section>
         <section className="selected-work" id={!mirror ? "work" : undefined}>
           <div className="copy-container projects-intro">
-            {!mirror && (
-              <div className="globe-object" data-three-scene="globe" />
-            )}
-            <Label>SELECTED WORK</Label>
-            <ScrollText
-              mirror={mirror}
-              lines={[
-                "Different ideas.",
-                "One standard.",
-                "Care in every detail.",
-              ]}
-              secret={[
-                "Make it useful.",
-                "Make it feel right.",
-                "Make it worth exploring.",
-              ]}
-            />
-            <p className="work-disclosure">
-              THREE IDEAS, BROUGHT TO LIFE. EXPLORE OUR SELECTED WORK.
+            <div className="chapter-rule" aria-hidden="true" />
+            <Label>03 / SELECTED WORK</Label>
+            <h2 className="work-section-heading">
+              Different worlds.
+              <br />
+              <em>The same care.</em>
+            </h2>
+            <p className="work-section-intro">
+              A storefront. A platform. An interactive playground. A considered
+              experience, every time.
             </p>
           </div>
-          <div className="copy-container project-gallery-container">
-            <WorkGallery
-              active={activeWork}
-              onChange={onWork}
-              onOpen={onProject}
-              mirror={mirror}
-            />
+          <div className="copy-container work-showcase-container">
+            <WorkShowcase mirror={mirror} />
           </div>
         </section>
-        <Reel mirror={mirror} />
         <section className="principles-section">
           <div className="copy-container">
-            <Label>WHAT WE BELIEVE</Label>
+            <div className="chapter-rule" aria-hidden="true" />
+            <Label>04 / OUR PRINCIPLES</Label>
             <div className="principles-grid">
               <div className="principles-statements">
                 {principles.map((principle, index) => (
@@ -816,19 +487,7 @@ function PageLayer({
                     aria-pressed={activePrinciple === i}
                   >
                     <span>
-                      {i === 0 ? (
-                        <img
-                          src="/images/studio-eye.webp"
-                          alt=""
-                          width="100"
-                          height="100"
-                          loading="lazy"
-                        />
-                      ) : i === 1 ? (
-                        <span className="thumb-orbit">⊕</span>
-                      ) : (
-                        <BrandMark />
-                      )}
+                      <span className="principle-index">0{i + 1}</span>
                     </span>
                   </button>
                 ))}
@@ -839,10 +498,10 @@ function PageLayer({
       </div>
       <div data-section={!mirror ? "contact" : undefined}>
         <section className="motto-section">
-          <div className="motto-background parallax-media" data-parallax="0.3">
+          <div className="motto-background parallax-media" data-parallax="0.12">
             {!mirror && (
               <img
-                src="/images/studio-eye.webp"
+                src="/images/threshold/threshold-desktop.webp"
                 alt=""
                 width="1672"
                 height="941"
@@ -850,17 +509,18 @@ function PageLayer({
               />
             )}
           </div>
-          <div className="motto-center" data-mask="expand">
-            <Label>OUR MOTTO</Label>
+          <div className="motto-center">
+            <Label>THE ASTRA APPROACH</Label>
             <h2
               className="motto-heading"
+              data-mask="expand"
               aria-label={
                 mirror ? "Less noise. More impact." : "Good code feels human."
               }
             >
               {(mirror
-                ? ["LESS NOISE.", "MORE IMPACT."]
-                : ["GOOD CODE", "FEELS HUMAN."]
+                ? ["Less noise.", "More impact."]
+                : ["Good code", "feels human."]
               ).map((line, i) => (
                 <span className="motto-line" key={i}>
                   <Characters text={line} />
@@ -875,9 +535,9 @@ function PageLayer({
           id={!mirror ? "contact" : undefined}
         >
           <div className="copy-container contact-invitation">
-            <span className="section-label">HAVE SOMETHING IN MIND?</span>
+            <span className="section-label">05 / THE NEXT CHAPTER</span>
             <button onClick={onEnquiry}>
-              Let’s make
+              <span>Let’s make</span>
               <br />
               it happen.
               <Arrow diagonal />
@@ -968,9 +628,6 @@ export default function Portfolio() {
   const [soundOn, setSoundOn] = useState(false);
   const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [openService, setOpenService] = useState<number | null>(null);
-  const [activeWork, setActiveWork] = useState(0);
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const [caseOpen, setCaseOpen] = useState(false);
   const { reduced, fine, compact } = useMotionSettings();
   const entrancePlayed = useRef(false);
   const [touchReveal, setTouchReveal] = useState(false);
@@ -978,7 +635,6 @@ export default function Portfolio() {
   const progressRef = useRef<HTMLSpanElement>(null);
   const startRef = useRef<HTMLButtonElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
-  const caseRef = useRef<HTMLDialogElement>(null);
   const audioRef = useRef<{
     context: AudioContext;
     gain: GainNode;
@@ -1006,15 +662,6 @@ export default function Portfolio() {
           progressRef.current.textContent = `${Math.round(counter.value)}%`;
       },
     });
-    const images = ["/images/studio-work-poster.jpg"].map(
-      (src) =>
-        new Promise<void>((resolve) => {
-          const image = new Image();
-          image.onload = () => resolve();
-          image.onerror = () => resolve();
-          image.src = src;
-        }),
-    );
     const timeout = setTimeout(() => finish(), 4000);
     const finish = () => {
       if (cancelled) return;
@@ -1033,7 +680,15 @@ export default function Portfolio() {
         },
       });
     };
-    void Promise.all([...images, document.fonts.ready]).then(finish);
+    const artwork = new Promise<void>((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve();
+      image.onerror = () => resolve();
+      image.src = matchMedia("(max-width: 767.98px)").matches
+        ? "/images/threshold/threshold-mobile.webp"
+        : "/images/threshold/threshold-desktop.webp";
+    });
+    void Promise.all([document.fonts.ready, artwork]).then(finish);
     return () => {
       cancelled = true;
       clearTimeout(timeout);
@@ -1171,7 +826,7 @@ export default function Portfolio() {
       event.preventDefault();
       lenis.scrollTo(section, {
         duration: reduced ? 0 : compact ? 0.8 : 1.15,
-        offset: compact ? -84 : 0,
+        offset: 0,
         onComplete: () => {
           if (!section.hasAttribute("tabindex"))
             section.setAttribute("tabindex", "-1");
@@ -1188,13 +843,25 @@ export default function Portfolio() {
     const context = gsap.context(() => {
       if (playEntrance) {
         gsap.fromTo(
-          ".hero-name .character",
-          { yPercent: 105 },
+          ".hero-name",
+          { opacity: 0, y: 12 },
           {
-            yPercent: 0,
+            opacity: 1,
+            y: 0,
             duration: reduced ? 0 : 0.8,
-            delay: reduced ? 0 : 0.8,
-            stagger: reduced ? 0 : 0.018,
+            delay: reduced ? 0 : 0.35,
+            ease: "power3.out",
+          },
+        );
+        gsap.fromTo(
+          ".hero-introduction,.hero-work-link",
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: reduced ? 0 : 0.9,
+            delay: reduced ? 0 : compact ? 0.9 : 1.2,
+            stagger: reduced ? 0 : 0.09,
             ease: "power3.out",
           },
         );
@@ -1213,21 +880,10 @@ export default function Portfolio() {
               rotationX: 0,
               duration: reduced ? 0 : compact ? 1.05 : 1.4,
               delay: reduced ? 0 : compact ? 0.35 : 0.6,
-              stagger: reduced ? 0 : compact ? 0.012 : 0.015,
+              stagger: reduced ? 0 : compact ? 0.008 : 0.012,
               ease: "power3.out",
             },
           ),
-        );
-        gsap.fromTo(
-          ".base-layer .hero-background",
-          { opacity: 0, scale: compact ? 1.06 : 1.14 },
-          {
-            opacity: 1,
-            scale: 1,
-            duration: reduced ? 0 : 1.8,
-            delay: reduced ? 0 : 0.3,
-            ease: "power3.inOut",
-          },
         );
       }
       root
@@ -1291,26 +947,41 @@ export default function Portfolio() {
               },
             );
           });
-        if (fine && !compact)
-          root
-            .querySelectorAll<HTMLElement>(".base-layer [data-reel-section]")
-            .forEach((reel) =>
-              gsap.fromTo(
-                reel.querySelector(".reel-window"),
-                { clipPath: "inset(20%)" },
-                {
-                  clipPath: "inset(0%)",
-                  ease: "none",
-                  scrollTrigger: {
-                    trigger: reel,
-                    start: "top bottom",
-                    end: "center center",
-                    scrub: 0.3,
-                  },
-                },
-              ),
-            );
       }
+      root
+        .querySelectorAll<HTMLElement>(
+          ".base-layer [data-studio-enter],.base-layer [data-project-media]",
+        )
+        .forEach((element) => {
+          if (reduced) return;
+          const media = element.hasAttribute("data-project-media");
+          gsap.fromTo(
+            element,
+            { opacity: 0, y: compact ? 18 : media ? 36 : 22 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: compact ? 0.7 : media ? 1.2 : 0.95,
+              ease: "power3.out",
+              scrollTrigger: { trigger: element, start: "top 93%", once: true },
+            },
+          );
+        });
+      root
+        .querySelectorAll<HTMLElement>(".base-layer .chapter-rule")
+        .forEach((rule) => {
+          if (reduced) return;
+          gsap.fromTo(
+            rule,
+            { scaleX: 0 },
+            {
+              scaleX: 1,
+              duration: compact ? 0.8 : 1.4,
+              ease: "power3.out",
+              scrollTrigger: { trigger: rule, start: "top 92%", once: true },
+            },
+          );
+        });
       root.querySelectorAll<HTMLElement>("[data-section]").forEach((section) =>
         ScrollTrigger.create({
           trigger: section,
@@ -1376,7 +1047,7 @@ export default function Portfolio() {
     };
     const popstate = () => {
       const section = document.getElementById(location.hash.slice(1));
-      if (section) lenis.scrollTo(section, { immediate: true });
+      if (section) lenis.scrollTo(section, { immediate: true, offset: 0 });
     };
     const focusTimeout = window.setTimeout(
       () => {
@@ -1414,35 +1085,8 @@ export default function Portfolio() {
     };
   }, [entered, reduced, fine, compact]);
 
-  useDialogMotion(caseRef, caseOpen);
   useEffect(() => {
-    if (!caseOpen || selectedProject === null) return;
-    const dialog = caseRef.current;
-    const transitions: Animation[] = [];
-    if (dialog && !reduced) {
-      dialog
-        .querySelectorAll(".case-copy,.case-detail-media,.case-art")
-        .forEach((element) => {
-          element.getAnimations().forEach((animation) => animation.cancel());
-          transitions.push(
-            element.animate(
-              [
-                { opacity: 0, transform: "translateY(16px)" },
-                { opacity: 1, transform: "translateY(0)" },
-              ],
-              { duration: 600, easing: "cubic-bezier(.16,1,.3,1)" },
-            ),
-          );
-        });
-    }
-    caseRef.current?.scrollTo({ top: 0, behavior: "instant" });
-    caseRef.current
-      ?.querySelector<HTMLElement>("#case-title")
-      ?.focus({ preventScroll: true });
-    return () => transitions.forEach((animation) => animation.cancel());
-  }, [selectedProject, caseOpen, reduced]);
-  useEffect(() => {
-    if (enquiryOpen || caseOpen) {
+    if (enquiryOpen) {
       lenisRef.current?.stop();
       return;
     }
@@ -1451,7 +1095,7 @@ export default function Portfolio() {
       reduced ? 0 : 280,
     );
     return () => clearTimeout(timer);
-  }, [enquiryOpen, caseOpen, reduced, fine, compact, entered]);
+  }, [enquiryOpen, reduced, fine, compact, entered]);
   useEffect(
     () => () => {
       if (holdTimer.current) clearTimeout(holdTimer.current);
@@ -1484,7 +1128,6 @@ export default function Portfolio() {
     };
   }, []);
   const openEnquiry = () => {
-    setCaseOpen(false);
     setEnquiryOpen(true);
   };
   const reveal = (active: boolean, element?: HTMLElement) => {
@@ -1532,7 +1175,6 @@ export default function Portfolio() {
       setSoundOn(false);
     }
   };
-  const selected = selectedProject !== null ? projects[selectedProject] : null;
 
   return (
     <div
@@ -1581,6 +1223,9 @@ export default function Portfolio() {
       <header className="fixed-header" inert={!entered}>
         <a className="fixed-logo" href="#about" aria-label="Astra devs home">
           <BrandMark interactive active={entered} />
+          <span className="header-wordmark" aria-hidden="true">
+            astra devs
+          </span>
         </a>
         <nav className="fixed-navigation" aria-label="Main navigation">
           {["about", "work", "contact"].map((section) => (
@@ -1599,15 +1244,9 @@ export default function Portfolio() {
             mirror={false}
             entered={entered}
             activePrinciple={activePrinciple}
-            onProject={(index) => {
-              setSelectedProject(index);
-              setCaseOpen(true);
-            }}
             onEnquiry={openEnquiry}
             openService={openService}
             onService={setOpenService}
-            activeWork={activeWork}
-            onWork={setActiveWork}
           />
         </div>
         <div className="mask-layer" aria-hidden="true" inert>
@@ -1615,16 +1254,12 @@ export default function Portfolio() {
             mirror
             entered={entered}
             activePrinciple={activePrinciple}
-            onProject={() => {}}
             onEnquiry={() => {}}
             openService={openService}
             onService={() => {}}
-            activeWork={activeWork}
-            onWork={() => {}}
           />
         </div>
       </main>
-      {entered && <VisualScenes enabled />}
       <footer className="fixed-footer" inert={!entered}>
         <div className="footer-shortcuts">
           <a href="#work" aria-label="Explore our work">
@@ -1724,84 +1359,6 @@ export default function Portfolio() {
         </svg>
       </button>
       <Enquiry open={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
-      <dialog
-        className="case-dialog"
-        data-lenis-prevent
-        ref={caseRef}
-        onCancel={(event) => {
-          event.preventDefault();
-          setCaseOpen(false);
-        }}
-        onClick={(e) => {
-          if (e.target === e.currentTarget) setCaseOpen(false);
-        }}
-        aria-labelledby="case-title"
-      >
-        {selected && (
-          <>
-            <button
-              className="dialog-close"
-              onClick={() => setCaseOpen(false)}
-              aria-label="Close project"
-            >
-              CLOSE ×
-            </button>
-            <ProjectPreview project={selected} />
-            <div className="case-copy">
-              <Label>SELECTED WORK / {selected.type}</Label>
-              <h2 id="case-title" tabIndex={-1}>
-                {selected.name}
-                <Arrow diagonal />
-              </h2>
-              <p>{selected.description}</p>
-              <span className="case-tags">{selected.tags}</span>
-              <h3 className="case-headline">{selected.headline}</h3>
-              <div className="case-features">
-                {selected.features.map((feature, index) => (
-                  <div key={feature.title}>
-                    <span>0{index + 1}</span>
-                    <h4>{feature.title}</h4>
-                    <p>{feature.text}</p>
-                  </div>
-                ))}
-              </div>
-              <a
-                className="line-button"
-                href={selected.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                VISIT LIVE WEBSITE <Arrow diagonal />
-              </a>
-              <span className="case-domain">{selected.domain}</span>
-            </div>
-            <figure className={`case-detail-media gallery-${selected.theme}`}>
-              <img
-                src={selected.detailImage}
-                alt={`${selected.name} — ${selected.detailCaption}`}
-                width="1265"
-                height="712"
-                loading="lazy"
-                decoding="async"
-              />
-              <figcaption>{selected.detailCaption}</figcaption>
-            </figure>
-            <div className="case-next-project">
-              <span>KEEP EXPLORING</span>
-              <button
-                onClick={() =>
-                  setSelectedProject(
-                    ((selectedProject ?? 0) + 1) % projects.length,
-                  )
-                }
-              >
-                {projects[((selectedProject ?? 0) + 1) % projects.length].name}{" "}
-                <Arrow diagonal />
-              </button>
-            </div>
-          </>
-        )}
-      </dialog>
     </div>
   );
 }

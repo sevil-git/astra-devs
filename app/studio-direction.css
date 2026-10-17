@@ -1,0 +1,689 @@
+/* A single material and typographic language beyond The Threshold. */
+:root {
+  --foreground: #d8cdbb;
+  --orange: #dd936c;
+  --border: #c4b39726;
+}
+.copy-container {
+  width: 83.4%;
+  max-width: 1440px;
+}
+.section-label {
+  font:
+    9px/1.6 "Manrope",
+    sans-serif;
+  letter-spacing: 0.17em;
+  color: #aa9981;
+}
+.chapter-rule {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, #c4b39755, #c4b3970a);
+  margin-bottom: 45px;
+  transform-origin: left center;
+}
+.about-studio {
+  background: radial-gradient(ellipse at 0 35%, #8f6c4510, transparent 65%);
+}
+.about-intro {
+  padding-top: 115px;
+  padding-bottom: 115px;
+}
+.about-intro .maskable-text,
+.experience-intro .maskable-text {
+  font-size: clamp(36px, 4.35vw, 70px);
+  line-height: 1.14;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+.about-intro .section-label,
+.experience-intro .section-label {
+  display: block;
+  margin-bottom: 35px;
+}
+.about-intro .maskable-text strong,
+.experience-intro .maskable-text strong {
+  font-weight: 500;
+  color: #f1e6d3;
+}
+.capabilities {
+  padding-bottom: 110px;
+}
+.capabilities > .copy-container {
+  margin-bottom: 27px;
+}
+.capability-row .oversize-heading,
+.capability-row .row-reveal-content h2 {
+  font-size: clamp(42px, 5.5vw, 82px);
+  text-transform: none;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+}
+.capability-row .row-button > .copy-container {
+  min-height: 132px;
+  padding: 28px 0;
+}
+.capability-row .row-reveal-content {
+  gap: 40px;
+}
+.capability-row .row-reveal-content p {
+  font:
+    14px/1.65 "Manrope",
+    sans-serif;
+  width: 42%;
+  max-width: 400px;
+}
+.capability-row .row-reveal-content small {
+  font:
+    10px/1.5 "Manrope",
+    sans-serif;
+  margin-top: 12px;
+  opacity: 0.65;
+}
+.experience-section {
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #0d0d0d, #171510 50%, #0d0d0d);
+}
+.work-background.portal-echo {
+  inset: 0;
+  background: radial-gradient(ellipse at 100% 45%, #bb92691c, transparent 70%);
+}
+.work-background.portal-echo::before {
+  content: "";
+  position: absolute;
+  right: -14%;
+  top: 12%;
+  width: 44%;
+  aspect-ratio: 0.9;
+  border: 1px solid #b69b6f20;
+  border-radius: 50% 50% 0 0;
+  transform: rotate(-15deg);
+}
+.experience-intro {
+  padding-top: 40px;
+  padding-bottom: 100px;
+}
+.process-history {
+  margin-top: 0;
+}
+.process-history > .copy-container .section-label {
+  margin-bottom: 26px;
+}
+.history-content {
+  grid-template-columns: 0.35fr 1.8fr 1fr;
+  padding: 35px 0;
+  gap: 32px;
+}
+.history-content > span {
+  font:
+    10px/1.5 "Manrope",
+    sans-serif;
+  opacity: 0.5;
+}
+.history-content h3 {
+  font-size: clamp(26px, 2.8vw, 42px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.history-content p {
+  font:
+    12px/1.6 "Manrope",
+    sans-serif;
+  opacity: 0.65;
+}
+.selected-work {
+  background: linear-gradient(
+    180deg,
+    #0d0d0d,
+    #181611 14%,
+    #14120f 75%,
+    #0d0d0d
+  );
+}
+.principles-section {
+  padding-top: 65px;
+  padding-bottom: 65px;
+}
+.principles-section > .copy-container > .section-label {
+  margin-bottom: 36px;
+}
+.principles-grid {
+  grid-template-columns: minmax(0, 1fr) 90px;
+  gap: 70px;
+}
+.principle {
+  min-height: 440px;
+  padding: 80px 0;
+}
+.principle .maskable-text {
+  font-size: clamp(38px, 4.8vw, 72px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.06;
+}
+.quote-mark {
+  top: 68px;
+  left: -0.57em;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 90px;
+  font-weight: 400;
+  color: #ac805966;
+}
+.principle-signature {
+  margin-top: 30px;
+  font:
+    9px/1.5 "Manrope",
+    sans-serif;
+  letter-spacing: 0.12em;
+}
+.principle-signature span {
+  font:
+    12px/1.7 "Manrope",
+    sans-serif;
+  color: #b6a991;
+  margin-top: 9px;
+}
+.principles-rail {
+  margin-top: 80px;
+  top: 32vh;
+}
+.principle-thumb {
+  width: 90px;
+  height: 90px;
+  padding: 10px 0 10px 20px;
+}
+.principle-thumb > span {
+  width: 64px;
+  height: 64px;
+  background: transparent;
+  border: 1px solid #c4b39730;
+  filter: none;
+  border-radius: 50% 50% 0 0;
+  color: #8e816d;
+  transition:
+    color 0.4s,
+    border-color 0.4s,
+    background 0.4s;
+}
+.principle-thumb.is-active > span,
+.principle-thumb:hover > span {
+  background: #b9956c12;
+  color: #e9d7b9;
+  border-color: #b9956c80;
+}
+.principle-index {
+  font:
+    500 22px/1 "Space Grotesk", sans-serif;
+}
+.rail-indicator {
+  height: 90px;
+  color: #bb9c72;
+}
+.motto-section {
+  min-height: 680px;
+  padding: 120px 0;
+}
+.motto-background {
+  inset: 0;
+}
+.motto-background img {
+  object-position: 70% 50%;
+  filter: brightness(0.5) saturate(0.65);
+  transform: scale(1.1);
+}
+.motto-background:after {
+  background: linear-gradient(
+    180deg,
+    #0d0d0d,
+    transparent 35%,
+    #0d0d0d33 60%,
+    #0d0d0d
+  );
+}
+.motto-heading {
+  font-size: clamp(58px, 7.5vw, 116px);
+  line-height: 1.03;
+  text-transform: none;
+  font-weight: 500;
+  padding-bottom: 32px;
+}
+.motto-line:first-child {
+  font:
+    500 1em/1.1 "Space Grotesk", sans-serif;
+  letter-spacing: -0.05em;
+}
+.motto-center > .section-label {
+  color: #c4b397;
+  margin-bottom: 32px;
+}
+.motto-center > p:last-child {
+  font:
+    10px/1.5 "Manrope",
+    sans-serif;
+  letter-spacing: 0.12em;
+  color: #c4b397;
+}
+.connect-section {
+  padding: 110px 0 90px;
+  background: radial-gradient(ellipse at 80% 0, #9a714215, transparent 70%);
+}
+.contact-invitation {
+  gap: 60px;
+  padding-bottom: 65px;
+  margin-bottom: 65px;
+}
+.contact-invitation > button {
+  font-size: clamp(52px, 6.5vw, 100px);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+}
+.contact-invitation > button > span {
+  font:
+    500 1em/1.1 "Space Grotesk", sans-serif;
+  letter-spacing: -0.06em;
+}
+.contact-invitation > p {
+  font:
+    14px/1.85 "Manrope",
+    sans-serif;
+  color: #b9ad9b;
+}
+.contact-invitation > .section-label {
+  margin-bottom: 30px;
+  color: #b7a080;
+}
+.connect-grid {
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+}
+.connect-links .roll-link {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.contact-email {
+  font-size: clamp(16px, 1.7vw, 27px);
+  font-weight: 500;
+}
+.contact-detail-label {
+  font:
+    11px/1.6 "Manrope",
+    sans-serif;
+  color: #aa9981;
+}
+.contact-details .roll-link {
+  font-size: 25px;
+  font-weight: 500;
+}
+.end-credit {
+  width: 83.4%;
+  max-width: 1440px;
+  margin-top: 90px;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+.enquiry-dialog {
+  border-color: #bca07745;
+  background: #171510;
+}
+.enquiry-dialog h2 {
+  font-weight: 500;
+}
+.enquiry-dialog input,
+.enquiry-dialog textarea,
+.enquiry-dialog select {
+  border-color: #baa28140;
+}
+.mask-layer .about-studio,
+.mask-layer .experience-section,
+.mask-layer .selected-work,
+.mask-layer .principles-section,
+.mask-layer .connect-section {
+  background: var(--orange);
+}
+.mask-layer .work-background {
+  display: none;
+}
+.mask-layer .section-label,
+.mask-layer .contact-invitation > p,
+.mask-layer .contact-detail-label,
+.mask-layer .principle-signature span {
+  color: #38251d;
+}
+.mask-layer .chapter-rule {
+  background: #38251d40;
+}
+.mask-layer .principle-thumb > span {
+  background: transparent;
+  color: #38251d;
+  border-color: #38251d50;
+}
+.mask-layer .principle-thumb.is-active > span {
+  background: #38251d18;
+  border-color: #38251d;
+}
+.mask-layer .motto-section {
+  background: var(--orange);
+}
+@media (max-width: 1050px) {
+  .row-reveal-content h2 {
+    max-width: 52%;
+  }
+  .connect-grid {
+    gap: 35px;
+  }
+  .connect-links {
+    gap: 18px;
+  }
+  .contact-invitation {
+    gap: 35px;
+  }
+  .contact-email {
+    font-size: 18px;
+  }
+}
+@media (max-width: 767.98px) {
+  .copy-container {
+    width: calc(100% - 40px);
+  }
+  .section-label {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+  .chapter-rule {
+    margin-bottom: 30px;
+  }
+  .about-intro {
+    padding-top: 70px;
+    padding-bottom: 65px;
+  }
+  .about-intro .maskable-text,
+  .experience-intro .maskable-text {
+    font-size: clamp(25px, 6.5vw, 43px);
+    line-height: 1.16;
+    letter-spacing: -0.035em;
+  }
+  .about-intro .section-label,
+  .experience-intro .section-label {
+    margin-bottom: 25px;
+  }
+  .capabilities {
+    padding-bottom: 70px;
+  }
+  .capabilities > .copy-container {
+    margin-bottom: 22px;
+  }
+  .capability-row .row-button > .copy-container {
+    min-height: 95px;
+    padding: 25px 0;
+  }
+  .capability-row .oversize-heading {
+    font-size: clamp(34px, 8.6vw, 52px);
+  }
+  .capability-row .row-reveal-content {
+    gap: 12px;
+  }
+  .capability-row .row-reveal-content h2,
+  .capability-row.is-open .row-reveal-content h2 {
+    font-size: 30px;
+    max-width: 100%;
+  }
+  .capability-row .row-reveal-content p,
+  .capability-row.is-open .row-reveal-content p {
+    width: 100%;
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .capability-row.is-open .row-button > .copy-container {
+    min-height: 250px;
+  }
+  .capability-row .row-reveal-content small {
+    font-size: 10px;
+  }
+  .experience-section {
+    padding-bottom: 45px;
+  }
+  .experience-intro {
+    padding-top: 0;
+    padding-bottom: 65px;
+  }
+  .history-content {
+    grid-template-columns: 25px minmax(0, 1fr);
+    gap: 12px;
+    padding: 25px 0;
+  }
+  .history-content h3 {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+  .history-content > span {
+    font-size: 8px;
+  }
+  .history-content p {
+    grid-column: 2;
+    text-align: left;
+    font-size: 11px;
+  }
+  .principles-section {
+    padding-top: 25px;
+    padding-bottom: 20px;
+  }
+  .principles-grid {
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 12px;
+  }
+  .principle {
+    min-height: 330px;
+    padding: 55px 0;
+  }
+  .principle .maskable-text {
+    font-size: clamp(28px, 7.8vw, 42px);
+  }
+  .quote-mark {
+    position: relative;
+    top: auto;
+    left: 0;
+    font-size: 55px;
+    margin-bottom: 20px;
+  }
+  .principle-signature {
+    margin-top: 25px;
+    font-size: 8px;
+  }
+  .principle-signature span {
+    font-size: 10px;
+    line-height: 1.6;
+    max-width: 24ch;
+  }
+  .principles-rail {
+    margin-top: 50px;
+    top: 30vh;
+  }
+  .principle-thumb {
+    width: 40px;
+    height: 60px;
+    padding: 8px 0;
+  }
+  .principle-thumb > span {
+    width: 38px;
+    height: 44px;
+  }
+  .principle-index {
+    font-size: 16px;
+  }
+  .rail-indicator {
+    height: 60px;
+    left: -10px;
+    font-size: 8px;
+  }
+  .motto-section {
+    min-height: 540px;
+    padding: 100px 0;
+  }
+  .motto-heading {
+    font-size: clamp(44px, 10.5vw, 74px);
+    padding-bottom: 26px;
+  }
+  .motto-background img {
+    object-position: 66% 50%;
+    transform: none;
+  }
+  .motto-center > .section-label {
+    margin-bottom: 26px;
+    font-size: 8px;
+  }
+  .motto-center > p:last-child {
+    font-size: 8px;
+  }
+  .connect-section {
+    padding: 65px 0 100px;
+  }
+  .contact-invitation {
+    display: block;
+    padding-bottom: 35px;
+    margin-bottom: 38px;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact-invitation > button {
+    font-size: clamp(48px, 12vw, 76px);
+    max-width: 500px;
+  }
+  .contact-invitation > button svg {
+    width: 28px;
+    height: 28px;
+  }
+  .contact-invitation > p {
+    margin-top: 25px;
+    font-size: 12px;
+    max-width: 34ch;
+  }
+  .contact-invitation > .section-label {
+    font-size: 8px;
+    margin-bottom: 26px;
+  }
+  .connect-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 42px;
+  }
+  .connect-grid .section-label {
+    margin-bottom: 22px;
+  }
+  .connect-links {
+    gap: 25px;
+  }
+  .connect-links .roll-link {
+    font-size: 14px;
+    min-height: 30px;
+    margin-bottom: 4px;
+  }
+  .contact-email {
+    font-size: clamp(16px, 4.7vw, 22px);
+  }
+  .contact-details .roll-link {
+    font-size: 22px;
+  }
+  .contact-details > div + div {
+    margin-top: 25px;
+  }
+  .end-credit {
+    width: calc(100% - 40px);
+    margin-top: 60px;
+    font-size: 6px;
+    gap: 15px;
+  }
+}
+/* The measured content width already contains its gutters. */
+.copy-container {
+  padding-left: 0;
+  padding-right: 0;
+}
+.alternate-copy {
+  line-height: inherit;
+}
+.mask-layer .motto-center > p:last-child {
+  color: #38251d;
+}
+@media (max-width: 767.98px) {
+  .work-section-heading {
+    font-size: clamp(32px, 8.4vw, 64px);
+  }
+}
+#studio,
+#work,
+#contact {
+  scroll-margin-top: 0;
+}
+#services,
+#approach {
+  scroll-margin-top: 100px;
+}
+@media (max-width: 767.98px) {
+  #services,
+  #approach {
+    scroll-margin-top: 84px;
+  }
+  #studio,
+  #contact {
+    scroll-margin-top: 20px;
+  }
+}
+.enquiry-dialog h2 {
+  font-size: clamp(36px, 4.5vw, 54px);
+  text-transform: none;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+.enquiry-dialog h2 em {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 400;
+}
+@media (max-width: 767.98px) {
+  .enquiry-dialog h2 {
+    font-size: clamp(30px, 8vw, 46px);
+  }
+}
+@media (max-width: 767.98px) {
+  .fixed-header {
+    height: 72px;
+    background: #0d0d0de8;
+    backdrop-filter: blur(12px);
+  }
+}
+@media (max-width: 767.98px) {
+  .contact-details {
+    padding-top: 0;
+  }
+}
+@media (max-width: 767.98px) {
+  .principles-grid {
+    grid-template-columns: minmax(0, 1fr) 48px;
+  }
+  .principle-thumb {
+    width: 48px;
+  }
+  .connect-links .roll-link {
+    min-height: 44px;
+    padding: 8px 0;
+    margin-bottom: 0;
+  }
+  .enquiry-dialog .dialog-close {
+    min-height: 44px;
+    min-width: 70px;
+  }
+}
+.motto-heading {
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Upright, locally hosted studio typography. */
+:root { font-synthesis: none; }
+em, i { font-style: normal; }
+.hero-heading, .work-section-heading, .project-title, .motto-heading, .contact-invitation > button, .enquiry-heading { font-family: "Space Grotesk", sans-serif; }
+.work-section-heading em, .enquiry-title em { font-style: normal; font-weight: 500; }

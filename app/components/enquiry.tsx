@@ -61,15 +61,15 @@ export default function Enquiry({
         <h2 id="enquiry-title" tabIndex={-1}>
           {brief ? (
             <>
-              YOUR NEXT
+              <em>Your next</em>
               <br />
-              CHAPTER.
+              chapter.
             </>
           ) : (
             <>
-              BIG IDEA?
+              <em>Big idea?</em>
               <br />
-              <span>WE’RE LISTENING.</span>
+              <span>We’re listening.</span>
             </>
           )}
         </h2>

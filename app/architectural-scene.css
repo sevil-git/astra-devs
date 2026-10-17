@@ -1,0 +1,458 @@
+/* The Threshold — original architectural artwork, composed for each viewport. */
+.portal-hero {
+  min-height: max(720px, 100svh);
+  color: #f4eee5;
+  background: #171614;
+  justify-content: flex-start;
+  isolation: isolate;
+}
+.hero-background.portal-background {
+  background: #171614;
+  overflow: clip;
+  pointer-events: none;
+  will-change: auto;
+  animation: portal-arrive 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.portal-artwork,
+.portal-artwork img,
+.portal-canvas,
+.portal-shade,
+.portal-finish {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.portal-artwork img {
+  display: block;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+.portal-canvas {
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+.portal-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.portal-background.is-ready .portal-canvas {
+  opacity: 1;
+}
+.portal-shade {
+  background:
+    linear-gradient(90deg, #0c0c0bc4 0%, #0c0c0b66 32%, transparent 63%),
+    linear-gradient(
+      180deg,
+      #0b0b0b55,
+      transparent 28%,
+      transparent 65%,
+      #0d0d0d
+    );
+}
+.portal-finish {
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+}
+.portal-hero .hero-center {
+  width: min(690px, 54%);
+  max-width: none;
+  margin: 0 0 15px 8.3%;
+  padding: 130px 0;
+  text-align: left;
+  text-shadow: none;
+}
+.portal-hero .hero-name {
+  margin: 0 0 38px;
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 11px;
+  font:
+    10px/1.5 "Manrope",
+    sans-serif;
+  letter-spacing: 0.15em;
+}
+.hero-eyebrow-rule {
+  display: block;
+  width: 23px;
+  height: 1px;
+  background: #c4b397;
+}
+.portal-hero .hero-descriptor {
+  display: inline;
+  margin: 0;
+  font: inherit;
+  opacity: 0.54;
+  letter-spacing: 0.08em;
+}
+.portal-hero .hero-heading {
+  margin: 0;
+  font-size: clamp(64px, 6.6vw, 112px);
+  line-height: 1.04;
+  letter-spacing: -0.055em;
+  text-transform: none;
+  font-weight: 500;
+}
+.portal-hero .hero-line {
+  overflow: visible;
+  padding-bottom: 0.035em;
+}
+.portal-hero .hero-opening {
+  font-family: "Space Grotesk", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 1.1;
+}
+.portal-hero .hero-introduction {
+  margin: 28px 0 0;
+  color: #dfd7c9ce;
+  font-size: clamp(14px, 1.1vw, 17px);
+  line-height: 1.65;
+  letter-spacing: 0.005em;
+  font-weight: 500;
+}
+.hero-work-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 50px;
+  margin-top: 32px;
+  padding: 0 23px;
+  background: #f1e9dc;
+  border: 1px solid #f1e9dc;
+  color: #25221f;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  transition:
+    background 0.35s ease,
+    color 0.35s ease,
+    transform 0.5s var(--motion-out);
+}
+.hero-work-link > :last-child {
+  font-size: 21px;
+  line-height: 1;
+  transition: transform 0.4s var(--motion-out);
+}
+.hero-work-link:hover,
+.hero-work-link:focus-visible {
+  background: #fff8ed;
+  transform: translateY(-2px);
+}
+.hero-work-link:hover > :last-child,
+.hero-work-link:focus-visible > :last-child {
+  transform: translate(2px, -2px);
+}
+.portal-hero .hero-scroll {
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 16px;
+  color: #e2d9c5;
+  font:
+    8px/1.5 "Manrope",
+    sans-serif;
+  letter-spacing: 0.13em;
+  min-height: 44px;
+  transform: translateX(-50%);
+}
+.portal-hero .hero-scroll > :last-child {
+  font-size: 17px;
+}
+.hero-scene-note {
+  position: absolute;
+  right: 8.3%;
+  bottom: 117px;
+  font:
+    8px/1.5 "Manrope",
+    sans-serif;
+  letter-spacing: 0.18em;
+  color: #eee4d285;
+}
+.portal-hero > .background-motion-toggle {
+  bottom: 29px;
+  left: auto;
+  right: 8.3%;
+  min-width: 116px;
+  min-height: 44px;
+  justify-content: center;
+  padding: 10px 14px;
+  background: #1b181367;
+  backdrop-filter: blur(12px);
+  border-color: #d5c4a830;
+  color: #e5dac7;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+.work-background.portal-echo {
+  background: radial-gradient(ellipse at 95% 30%, #9e775516, transparent 65%);
+}
+.fixed-header {
+  mix-blend-mode: normal;
+  height: 108px;
+  background: linear-gradient(#0d0d0d75, transparent);
+}
+.fixed-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  top: 28px;
+}
+.fixed-logo .brand-mark {
+  width: 40px;
+  height: 40px;
+}
+.fixed-logo svg {
+  width: 40px;
+  height: 40px;
+}
+.header-wordmark {
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  color: #eee7dc;
+  white-space: nowrap;
+}
+.fixed-navigation {
+  flex-direction: row;
+  gap: 30px;
+  top: 37px;
+  align-items: center;
+}
+.fixed-navigation .roll-link {
+  color: #eee7dc99;
+  font:
+    11px/1.4 "Manrope",
+    sans-serif;
+  letter-spacing: 0.055em;
+  padding: 4px 0;
+}
+.fixed-navigation .roll-alternate {
+  color: #f4eee5;
+}
+@media (min-width: 768px) and (max-width: 1000px) {
+  .portal-hero .hero-center {
+    margin-left: 6%;
+    width: 60%;
+  }
+  .portal-hero .hero-heading {
+    font-size: clamp(58px, 7.2vw, 76px);
+  }
+  .portal-hero .hero-descriptor {
+    display: block;
+    flex-basis: 100%;
+    padding-left: 34px;
+  }
+  .portal-artwork img {
+    object-position: 60% 50%;
+  }
+}
+@media (max-width: 767.98px) {
+  .portal-hero {
+    min-height: max(700px, 100svh);
+    align-items: flex-end;
+  }
+  .portal-hero .hero-center {
+    width: 100%;
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    bottom: 108px;
+    padding: 0 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .portal-hero .hero-name {
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+  .portal-hero .hero-descriptor {
+    display: none;
+  }
+  .hero-eyebrow-rule {
+    width: 16px;
+  }
+  .portal-hero .hero-heading {
+    font-size: clamp(44px, 11.8vw, 76px);
+    line-height: 1.04;
+    letter-spacing: -0.055em;
+  }
+  .portal-hero .hero-introduction {
+    margin-top: 20px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #e5ddd1cd;
+  }
+  .hero-work-link {
+    min-height: 48px;
+    padding: 0 20px;
+    gap: 32px;
+    margin-top: 23px;
+    font-size: 12px;
+  }
+  .portal-artwork img {
+    object-position: center;
+  }
+  .portal-shade {
+    background: linear-gradient(
+      180deg,
+      #0d0d0d40,
+      transparent 17%,
+      transparent 35%,
+      #0d0d0d70 50%,
+      #0d0d0dbb 67%,
+      #0d0d0d
+    );
+  }
+  .portal-hero .hero-scroll {
+    bottom: 25px;
+    left: auto;
+    right: 24px;
+    transform: none;
+    font-size: 6px;
+    gap: 9px;
+    min-height: 44px;
+  }
+  .portal-hero > .background-motion-toggle {
+    left: 24px;
+    right: auto;
+    bottom: 25px;
+    transform: none;
+    font-size: 7px;
+    min-width: 105px;
+  }
+  .hero-scene-note {
+    display: none;
+  }
+  .fixed-header {
+    height: 76px;
+    background: linear-gradient(#0d0d0de6, #0d0d0d55, transparent);
+    backdrop-filter: none;
+  }
+  .fixed-logo {
+    top: 18px;
+    left: 20px;
+  }
+  .header-wordmark {
+    display: none;
+  }
+  .fixed-logo .brand-mark,
+  .fixed-logo svg {
+    width: 36px;
+    height: 36px;
+  }
+  .fixed-navigation {
+    top: 22px;
+    right: 20px;
+    gap: 16px;
+  }
+  .fixed-navigation .roll-link {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
+}
+@media (max-width: 374px) {
+  .portal-hero .hero-center {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .portal-hero .hero-heading {
+    font-size: 42px;
+  }
+  .portal-hero .hero-introduction {
+    font-size: 11px;
+  }
+  .fixed-navigation {
+    gap: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-canvas {
+    display: none;
+  }
+  .hero-work-link {
+    transform: none;
+  }
+}
+
+@keyframes portal-arrive {
+  from {
+    opacity: 0;
+    transform: scale(1.045);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* The second voice stays registered to the architecture's typography. */
+.mask-layer .portal-hero {
+  background: #dd936c;
+  color: #261c17;
+}
+.mask-layer .portal-hero .hero-center {
+  color: #261c17;
+}
+.mask-layer .portal-hero .hero-introduction {
+  color: #38251ddd;
+}
+.mask-layer .portal-hero .hero-eyebrow-rule {
+  background: #38251d;
+}
+.mask-layer .portal-hero .hero-work-link {
+  background: #261c17;
+  border-color: #261c17;
+  color: #f4e7d8;
+}
+.mask-layer .portal-hero .hero-scroll,
+.mask-layer .portal-hero .hero-scene-note {
+  color: #38251d;
+}
+.hero-reveal-hint {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-reveal-hint {
+    display: block;
+    position: absolute;
+    left: 8.3%;
+    bottom: 117px;
+    color: #e5dac780;
+    font:
+      7px/1.5 "Manrope",
+      sans-serif;
+    letter-spacing: 0.15em;
+    pointer-events: none;
+  }
+  .mask-layer .hero-reveal-hint {
+    color: #38251d;
+  }
+}
+@media (max-width: 767.98px) and (hover: hover) and (pointer: fine) {
+  .hero-reveal-hint {
+    display: none;
+  }
+}
+@media (max-width: 767.98px) and (pointer: coarse) {
+  .portal-hero > .background-motion-toggle {
+    left: auto;
+    right: 24px;
+  }
+  .portal-hero .hero-scroll {
+    display: none;
+  }
+}
