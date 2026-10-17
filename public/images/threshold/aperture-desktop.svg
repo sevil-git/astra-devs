@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1672" height="941" viewBox="0 0 1672 941">
+  <path fill="#000" d="M0 0h1672v941H0z"/>
+  <!-- Inner edge of the illustrated opening, ending at the stone sill. -->
+  <path fill="#fff" stroke="#fff" stroke-width="2" d="M1205 45C1353 45 1476 157 1476 308C1476 415 1416 505 1322 555H1027C953 506 916 421 917 326C916 167 1043 45 1205 45Z"/>
+</svg>

@@ -1,0 +1,97 @@
+/* A native sticky chapter: scroll remains reversible and links can skip it. */
+.about-sequence {
+  --portal-height: max(720px, 100svh);
+  --portal-travel: 180svh;
+  --studio-overlap: 36svh;
+  --studio-reading: 75svh;
+}
+.portal-journey {
+  position: relative;
+  height: calc(var(--portal-height) + var(--portal-travel));
+  background: #0d0d0d;
+}
+.portal-journey .portal-hero {
+  position: sticky;
+  top: 0;
+  height: var(--portal-height);
+  min-height: 0;
+}
+.portal-journey .hero-center {
+  opacity: var(--portal-copy-opacity, 1);
+  transform: translateY(var(--portal-copy-y, 0px));
+}
+.portal-journey .hero-scroll,
+.portal-journey .hero-scene-note,
+.portal-journey .hero-reveal-hint,
+.portal-journey .background-motion-toggle {
+  opacity: var(--portal-copy-opacity, 1);
+}
+.portal-journey .portal-shade {
+  opacity: var(--portal-shade-opacity, 1);
+}
+.portal-journey .portal-artwork {
+  transform-origin: 71.6% 34.7%;
+  transform: scale(var(--portal-fallback-scale, 1));
+}
+.portal-blackout {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  background: #0d0d0d;
+  opacity: var(--portal-blackout, 0);
+  pointer-events: none;
+}
+.has-entered .fixed-header,
+.has-entered .fixed-footer,
+.has-entered .reading-progress {
+  opacity: var(--portal-chrome-opacity, 1);
+}
+.has-entered .touch-hold { opacity: var(--portal-hold-opacity, 1); }
+.is-portal-travelling .mask-layer { visibility: hidden; }
+.about-sequence .about-studio {
+  z-index: 2;
+  margin-top: calc(0px - var(--portal-height) - var(--studio-overlap));
+}
+.about-sequence #studio {
+  scroll-margin-top: calc(0px - var(--studio-overlap));
+}
+.studio-intro-stage {
+  position: relative;
+  height: calc(var(--portal-height) + var(--studio-reading));
+  background: rgb(13 13 13 / var(--studio-arrival-black, 0));
+}
+.studio-intro-stage .about-intro {
+  position: sticky;
+  top: 0;
+  height: var(--portal-height);
+  padding-top: clamp(92px, 12svh, 140px);
+  padding-bottom: clamp(92px, 12svh, 140px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: var(--studio-arrival-opacity, 0);
+}
+.mask-layer .studio-intro-stage { background: #dd936c; }
+@media (max-width: 767.98px) {
+  .about-sequence {
+    --portal-height: max(700px, 100svh);
+    --portal-travel: 135svh;
+    --studio-overlap: 27svh;
+    --studio-reading: 65svh;
+  }
+  .portal-journey .portal-artwork { transform-origin: 52.5% 30.5%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .portal-journey { height: auto; }
+  .portal-journey .portal-hero { position: relative; }
+  .portal-journey .portal-artwork { transform: none; }
+  .portal-blackout { display: none; }
+  .about-sequence .about-studio { margin-top: 0; }
+  .about-sequence #studio { scroll-margin-top: 0; }
+  .studio-intro-stage { height: auto; background: none; }
+  .studio-intro-stage .about-intro {
+    position: relative;
+    height: auto;
+    opacity: 1;
+  }
+}

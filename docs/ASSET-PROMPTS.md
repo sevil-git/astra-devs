@@ -1,5 +1,18 @@
 # Original cinematic imagery
 
+## Ocean continuation — cinematic portal journey
+
+Generated October 17, 2026 with the built-in image-generation tool, using the existing desktop architectural artwork as a lighting/composition reference. Saved original: `public/images/threshold/ocean-continuation-source.png`. Served derivative: `public/images/threshold/ocean-continuation.webp` (1672 × 941, 132,626 bytes). Local Sharp conversion preserves the original PNG.
+
+Final prompt:
+
+> Use case: stylized-concept.
+> Asset type: seamless cinematic ocean continuation plate for the existing Astra devs architectural portal scene.
+> Input images: Image 1 is a composition and lighting reference, not an edit target.
+> Primary request: create the view from just OUTSIDE the circular window in the reference, with all architecture gone. A calm cinematic ocean at golden sunset, distant soft layered mountains near the horizon, a small low warm sun on the RIGHT at 72% of the width, and natural fine ripples with a long golden sun reflection. Match the reference's understated photographic realism, amber light, warm grey-blue sky, hazy mountain silhouettes and bronze water. Compose as a wide landscape 16:9 plate with the horizon at 57% of the height, ample clean softly clouded sky and water reaching every bottom edge. This will be slowly moved in parallax behind a stone portal before becoming full-screen. Camera at human eye height over water, never drone. No architecture, no walls, no window, no boats, no people, no text, no lens flare, no artificial neon. Premium quiet cinematic photograph, realistic water, warm but restrained grade.
+
+The desktop and mobile `aperture-*.svg` files are authored geometric mattes following the respective window opening and sill. They contain no borrowed artwork. The scene is layered 2.5D, not a navigable 3D model.
+
 Generated with the built-in `image_gen__imagegen` tool. Both PNGs are saved in this repository; neither depends on a remote generation URL. They depict anonymous fictional subjects, not agency team members.
 
 ## Former hero / experience (unused)

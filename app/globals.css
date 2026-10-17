@@ -17,6 +17,7 @@
   box-sizing: border-box;
 }
 html {
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: #696154 #0d0d0d;
 }

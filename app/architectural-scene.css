@@ -2,16 +2,20 @@
 .portal-hero {
   min-height: max(720px, 100svh);
   color: #f4eee5;
-  background: #171614;
+  background: #0d0d0d;
   justify-content: flex-start;
   isolation: isolate;
 }
 .hero-background.portal-background {
-  background: #171614;
+  background: #0d0d0d;
   overflow: clip;
   pointer-events: none;
   will-change: auto;
-  animation: portal-arrive 1.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 0;
+  transition: opacity 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.08s;
+}
+.has-entered .hero-background.portal-background.is-image-ready {
+  opacity: 1;
 }
 .portal-artwork,
 .portal-artwork img,
@@ -30,7 +34,7 @@
 }
 .portal-canvas {
   opacity: 0;
-  transition: opacity 1.8s ease;
+  transition: opacity 1.2s ease;
 }
 .portal-canvas canvas {
   display: block;
@@ -250,9 +254,6 @@
     flex-basis: 100%;
     padding-left: 34px;
   }
-  .portal-artwork img {
-    object-position: 60% 50%;
-  }
 }
 @media (max-width: 767.98px) {
   .portal-hero {
@@ -380,22 +381,12 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-background.portal-background { transition: none; }
   .portal-canvas {
     display: none;
   }
   .hero-work-link {
     transform: none;
-  }
-}
-
-@keyframes portal-arrive {
-  from {
-    opacity: 0;
-    transform: scale(1.045);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
   }
 }
 

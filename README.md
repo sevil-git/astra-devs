@@ -7,7 +7,7 @@ npm install
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000), then select **Start**. Move the pointer across large text to reveal the alternate page. On touch devices, hold the circular button to reveal it.
+Open [localhost:3000](http://localhost:3000), then select **Start**. Move the pointer across large text to reveal the alternate page. On phones and touch devices, hold the bottom-centred finger button: the ring charges, the copper alternate view opens, and release returns to the original. Keyboard hold and an assistive click toggle are supported.
 
 ```sh
 npm run build
@@ -25,6 +25,8 @@ npx tsc --noEmit
 - `app/work-showcase.css`: alternating project compositions, widescreen film stages, accessible playback controls, and stacked phone layouts.
 - `app/architectural-scene.css`: architectural art direction, responsive hero composition, typography, and navigation.
 - `app/components/architectural-scene.tsx`: original artwork with lightweight 2.5D camera drift, pool refraction, and an accessible motion control.
+- `app/components/hold-reveal.tsx`: charge feedback, pointer capture, keyboard/assistive activation, and cancellation of the mobile reveal gesture.
+- `app/hold-reveal.css`: safe-area control placement, orbiting type, progress ring, and reduced-motion styling.
 - `app/components/brand-mark.tsx`: original interactive SVG A character, pointer tracking, greeting, and press response.
 - `app/components/visual-scenes.tsx`: retired procedural scenes, retained as source but no longer imported by the page.
 - `app/components/enquiry.tsx`: native project enquiry dialog and local brief creation.

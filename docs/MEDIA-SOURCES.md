@@ -53,3 +53,7 @@ The corresponding `*-film.webp` images are compressed desktop posters from the s
 ### Typography
 
 Locally hosted **Space Grotesk** (display) and **Manrope** (supporting text), Latin subsets, upright weights only. Fontsource packages carry the SIL Open Font License 1.1: [Space Grotesk](https://fontsource.org/fonts/space-grotesk), [Manrope](https://fontsource.org/fonts/manrope). No external font requests. Georgia, serif italics, and Urbanist references were removed from the rendered page and the Open Graph artwork.
+
+## Portal ocean continuation — October 17, 2026
+
+`public/images/threshold/ocean-continuation.webp` is original AI-generated supporting scenery, created with the built-in image-generation tool using the existing Astra architectural illustration as a reference. Its PNG original and full production prompt are retained in the repository; see `docs/ASSET-PROMPTS.md`. The 1672 × 941 served WebP is approximately 130 KiB. The companion aperture SVGs are authored geometric masks, not third-party imagery.

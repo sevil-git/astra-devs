@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import dynamic from "next/dynamic";
 import WorkShowcase from "./work-showcase";
-const ArchitecturalScene = dynamic(() => import("./architectural-scene"), {
-  ssr: false,
-});
+const ArchitecturalScene = dynamic(() => import("./architectural-scene"));
 import Enquiry from "./enquiry";
 import BrandMark from "./brand-mark";
+import HoldReveal, { type HoldStage } from "./hold-reveal";
 import { useMotionSettings } from "./motion";
 
 const services = [
@@ -215,6 +214,7 @@ function PageLayer({
   onEnquiry,
   openService,
   onService,
+  journey,
 }: {
   mirror: boolean;
   entered: boolean;
@@ -222,94 +222,101 @@ function PageLayer({
   onEnquiry: () => void;
   openService: number | null;
   onService: (index: number | null) => void;
+  journey: RefObject<number>;
 }) {
   return (
     <>
       <div
+        className="about-sequence"
         id={!mirror ? "about" : undefined}
         data-section={!mirror ? "about" : undefined}
       >
-        <section className="portrait-hero portal-hero">
-          {!mirror && entered && <ArchitecturalScene />}
-          <div className="hero-center" data-mask="expand">
-            <p className="hero-name">
-              <span className="hero-eyebrow-rule" aria-hidden="true" />
-              <span>ASTRA DEVS</span>
-              <span className="hero-descriptor">
-                INDEPENDENT SOFTWARE STUDIO
-              </span>
-            </p>
-            <h1
-              className="hero-heading"
-              aria-label={mirror ? undefined : "From what if to holy shit."}
-            >
-              {(mirror
-                ? ["Less blah blah.", "More ta-da."]
-                : ["From “what if”", "to “holy shit.”"]
-              ).map((line, i) => (
-                <span
-                  className={`hero-line ${i === 0 ? "hero-opening" : ""}`}
-                  key={line}
-                  aria-hidden="true"
-                >
-                  <Characters text={line} />
+        <div className="portal-journey">
+          <section className="portrait-hero portal-hero">
+            {!mirror && <ArchitecturalScene journey={journey} active={entered} />}
+            <div className="hero-center" data-mask="expand">
+              <p className="hero-name">
+                <span className="hero-eyebrow-rule" aria-hidden="true" />
+                <span>ASTRA DEVS</span>
+                <span className="hero-descriptor">
+                  INDEPENDENT SOFTWARE STUDIO
                 </span>
-              ))}
-            </h1>
-            <p className="hero-introduction">
-              {mirror
-                ? "We take the work seriously."
-                : "Websites, apps & automations."}
-              <br />
-              {mirror
-                ? "Ourselves? A little less."
-                : "Good software. Minus the drama."}
-            </p>
+              </p>
+              <h1
+                className="hero-heading"
+                aria-label={mirror ? undefined : "From what if to holy shit."}
+              >
+                {(mirror
+                  ? ["Less blah blah.", "More ta-da."]
+                  : ["From “what if”", "to “holy shit.”"]
+                ).map((line, i) => (
+                  <span
+                    className={`hero-line ${i === 0 ? "hero-opening" : ""}`}
+                    key={line}
+                    aria-hidden="true"
+                  >
+                    <Characters text={line} />
+                  </span>
+                ))}
+              </h1>
+              <p className="hero-introduction">
+                {mirror
+                  ? "We take the work seriously."
+                  : "Websites, apps & automations."}
+                <br />
+                {mirror
+                  ? "Ourselves? A little less."
+                  : "Good software. Minus the drama."}
+              </p>
+              <a
+                className="hero-work-link"
+                href="#work"
+                tabIndex={mirror ? -1 : undefined}
+              >
+                <span>Explore our work</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <span className="hero-reveal-hint" aria-hidden="true">
+              {mirror ? "LESS BLAH BLAH. MORE TA-DA." : "HOVER TO SEE ANOTHER SIDE"}
+            </span>
+            <span className="hero-scene-note" aria-hidden="true">
+              A NEW PERSPECTIVE.
+            </span>
             <a
-              className="hero-work-link"
-              href="#work"
+              className="hero-scroll"
+              href="#studio"
               tabIndex={mirror ? -1 : undefined}
+              aria-label="Scroll to about the studio"
             >
-              <span>Explore our work</span>
-              <span aria-hidden="true">↗</span>
+              <span>SCROLL TO EXPLORE</span>
+              <span aria-hidden="true">↓</span>
             </a>
-          </div>
-          <span className="hero-reveal-hint" aria-hidden="true">
-            {mirror ? "LESS BLAH BLAH. MORE TA-DA." : "HOVER TO SEE ANOTHER SIDE"}
-          </span>
-          <span className="hero-scene-note" aria-hidden="true">
-            A NEW PERSPECTIVE.
-          </span>
-          <a
-            className="hero-scroll"
-            href="#studio"
-            tabIndex={mirror ? -1 : undefined}
-            aria-label="Scroll to about the studio"
-          >
-            <span>SCROLL TO EXPLORE</span>
-            <span aria-hidden="true">↓</span>
-          </a>
-        </section>
+            <div className="portal-blackout" aria-hidden="true" />
+          </section>
+        </div>
         <section className="about-studio" id={!mirror ? "studio" : undefined}>
-          <div className="copy-container about-intro">
-            <div className="chapter-rule" aria-hidden="true" />
-            <Label>01 / THE STUDIO</Label>
-            <ScrollText
-              mirror={mirror}
-              lines={[
-                "We build websites, apps,",
-                "and automations with a",
-                "strong focus on quality",
-                "& meaningful impact.",
-              ]}
-              secret={[
-                "Big ideas. Small egos.",
-                "Far too many tabs open.",
-                "Care in every decision,",
-                "and code with purpose.",
-              ]}
-              accent={["websites", "apps", "automations"]}
-            />
+          <div className="studio-intro-stage">
+            <div className="copy-container about-intro">
+              <div className="chapter-rule" aria-hidden="true" />
+              <Label>01 / THE STUDIO</Label>
+              <ScrollText
+                mirror={mirror}
+                lines={[
+                  "We build websites, apps,",
+                  "and automations with a",
+                  "strong focus on quality",
+                  "& meaningful impact.",
+                ]}
+                secret={[
+                  "Big ideas. Small egos.",
+                  "Far too many tabs open.",
+                  "Care in every decision,",
+                  "and code with purpose.",
+                ]}
+                accent={["websites", "apps", "automations"]}
+              />
+            </div>
           </div>
           <div className="capabilities" id={!mirror ? "services" : undefined}>
             <div className="copy-container">
@@ -630,6 +637,7 @@ export default function Portfolio() {
   const [openService, setOpenService] = useState<number | null>(null);
   const { reduced, fine, compact } = useMotionSettings();
   const entrancePlayed = useRef(false);
+  const journeyRef = useRef(0);
   const [touchReveal, setTouchReveal] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
@@ -640,7 +648,6 @@ export default function Portfolio() {
     gain: GainNode;
     oscillators: OscillatorNode[];
   } | null>(null);
-  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const maskRef = useRef({
     x: -1000,
     y: -1000,
@@ -682,7 +689,7 @@ export default function Portfolio() {
     };
     const artwork = new Promise<void>((resolve) => {
       const image = new Image();
-      image.onload = () => resolve();
+      image.onload = () => { void image.decode().catch(() => {}).then(() => resolve()); };
       image.onerror = () => resolve();
       image.src = matchMedia("(max-width: 767.98px)").matches
         ? "/images/threshold/threshold-mobile.webp"
@@ -840,7 +847,67 @@ export default function Portfolio() {
     window.addEventListener("blur", leave);
     document.addEventListener("click", anchor);
     gsap.ticker.add(tick);
+    // Native sticky stages keep both text layers registered. No pin spacers.
+    const journeys = [...root.querySelectorAll<HTMLElement>(".portal-journey")];
+    const hero = root.querySelector<HTMLElement>(".base-layer .portal-hero");
+    const chrome = [
+      ...root.querySelectorAll<HTMLElement>(
+        ".fixed-header,.fixed-footer,.touch-hold",
+      ),
+    ];
+    const smooth = (from: number, to: number, value: number) => {
+      const t = Math.max(0, Math.min(1, (value - from) / (to - from)));
+      return t * t * (3 - 2 * t);
+    };
+    const playhead = { value: 0 };
+    const drawJourney = () => {
+      const p = playhead.value;
+      journeyRef.current = p;
+      const copy = 1 - smooth(0.025, 0.19, p);
+      const blackout = smooth(0.79, 0.96, p);
+      journeys.forEach((stage) => {
+        stage.style.setProperty("--portal-copy-opacity", copy.toFixed(4));
+        stage.style.setProperty("--portal-copy-y", `${-24 * (1 - copy)}px`);
+        stage.style.setProperty("--portal-blackout", blackout.toFixed(4));
+        stage.style.setProperty(
+          "--portal-shade-opacity",
+          (1 - smooth(0.08, 0.4, p)).toFixed(4),
+        );
+        stage.style.setProperty(
+          "--portal-fallback-scale",
+          (1 + 7 * smooth(0.06, 0.78, p)).toFixed(4),
+        );
+      });
+      // The black cut is brief; navigation returns as the next chapter arrives.
+      const chromeOpacity = 1 - smooth(0.72, 0.9, p) * (1 - smooth(0.96, 1, p));
+      const holdOpacity = 1 - smooth(0.1, 0.25, p) * (1 - smooth(0.96, 1, p));
+      root.style.setProperty("--portal-chrome-opacity", chromeOpacity.toFixed(4));
+      root.style.setProperty("--portal-hold-opacity", holdOpacity.toFixed(4));
+      root.style.setProperty("--studio-arrival-opacity", smooth(0.83, 0.93, p).toFixed(4));
+      root.style.setProperty("--studio-arrival-black", smooth(0.79, 0.91, p).toFixed(4));
+      root.classList.toggle("is-portal-travelling", p > 0.15 && p < 1);
+      if (hero) hero.inert = p > 0.2;
+      chrome.forEach((element) => {
+        element.inert =
+          (element.classList.contains("touch-hold") ? holdOpacity : chromeOpacity) < 0.05;
+      });
+    };
     const context = gsap.context(() => {
+      const stage = journeys[0];
+      if (!reduced && stage && hero) {
+        gsap.to(playhead, {
+          value: 1,
+          ease: "none",
+          onUpdate: drawJourney,
+          scrollTrigger: {
+            trigger: stage,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: compact ? 0.3 : 0.55,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
       if (playEntrance) {
         gsap.fromTo(
           ".hero-name",
@@ -892,6 +959,24 @@ export default function Portfolio() {
           const lines = paragraph.querySelectorAll<HTMLElement>(".line-ink");
           if (reduced) {
             gsap.set(lines, { clipPath: "inset(0% 0% 0% 0%)" });
+            return;
+          }
+          const studioStage = paragraph.closest(".studio-intro-stage");
+          if (studioStage) {
+            gsap.set(lines, { clipPath: "inset(0% 100% 0% 0%)" });
+            gsap.to(lines, {
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1,
+              stagger: 1,
+              ease: "none",
+              scrollTrigger: {
+                trigger: studioStage,
+                start: () => `top+=${((journeys[0]?.offsetHeight ?? 0) - (hero?.offsetHeight ?? 0)) * 0.1} top`,
+                end: "bottom bottom",
+                scrub: compact ? 0.2 : 0.3,
+                invalidateOnRefresh: true,
+              },
+            });
             return;
           }
           gsap.fromTo(
@@ -1070,6 +1155,20 @@ export default function Portfolio() {
       window.clearTimeout(focusTimeout);
       window.clearTimeout(resizeTimer);
       context.revert();
+      journeyRef.current = 0;
+      journeys.forEach((stage) => {
+        [
+          "--portal-copy-opacity", "--portal-copy-y", "--portal-blackout",
+          "--portal-shade-opacity", "--portal-fallback-scale",
+        ].forEach((property) => stage.style.removeProperty(property));
+      });
+      root.style.removeProperty("--portal-chrome-opacity");
+      root.style.removeProperty("--portal-hold-opacity");
+      root.style.removeProperty("--studio-arrival-opacity");
+      root.style.removeProperty("--studio-arrival-black");
+      root.classList.remove("is-portal-travelling");
+      if (hero) hero.inert = false;
+      chrome.forEach((element) => { element.inert = false; });
       lenis.destroy();
       lenisRef.current = null;
       gsap.ticker.remove(tick);
@@ -1081,6 +1180,9 @@ export default function Portfolio() {
       window.removeEventListener("popstate", popstate);
       radiusTween.current?.kill();
       maskState.radius = 0;
+      maskState.hold = false;
+      maskState.targetX = -1000;
+      maskState.targetY = -1000;
       maskLayer?.style.setProperty("--mask-radius", "0px");
     };
   }, [entered, reduced, fine, compact]);
@@ -1098,54 +1200,40 @@ export default function Portfolio() {
   }, [enquiryOpen, reduced, fine, compact, entered]);
   useEffect(
     () => () => {
-      if (holdTimer.current) clearTimeout(holdTimer.current);
       audioRef.current?.oscillators.forEach((o) => o.stop());
       audioRef.current?.context.close();
     },
     [],
   );
-  useEffect(() => {
-    const release = () => {
-      if (holdTimer.current) clearTimeout(holdTimer.current);
-      if (!maskRef.current.hold) return;
-      maskRef.current.hold = false;
-      setTouchReveal(false);
-      radiusTween.current?.kill();
-      radiusTween.current = gsap.to(maskRef.current, {
-        radius: 0,
-        duration: 0.3,
-        ease: "power3.out",
-      });
-    };
-    const visibility = () => {
-      if (document.hidden) release();
-    };
-    window.addEventListener("blur", release);
-    document.addEventListener("visibilitychange", visibility);
-    return () => {
-      window.removeEventListener("blur", release);
-      document.removeEventListener("visibilitychange", visibility);
-    };
-  }, []);
-  const openEnquiry = () => {
-    setEnquiryOpen(true);
-  };
-  const reveal = (active: boolean, element?: HTMLElement) => {
+  const openEnquiry = () => { setEnquiryOpen(true); };
+  const changeHoldStage = useCallback((stage: HoldStage, button: HTMLButtonElement) => {
     const mask = maskRef.current;
-    mask.hold = active;
-    setTouchReveal(active);
-    if (active) {
-      const r = element?.getBoundingClientRect();
-      mask.targetX = mask.x = r ? r.left + r.width / 2 : innerWidth / 2;
-      mask.targetY = mask.y = r ? r.top + r.height / 2 : innerHeight / 2;
-    }
     radiusTween.current?.kill();
+    if (stage === "idle") {
+      mask.hold = false;
+      setTouchReveal(false);
+      radiusTween.current = gsap.to(mask, {
+        radius: 0, duration: reduced || document.hidden ? 0 : 0.6, ease: "power3.inOut",
+        onComplete: () => {
+          mask.hold = false;
+          mask.targetX = -1000;
+          mask.targetY = -1000;
+        },
+      });
+      return;
+    }
+    const rect = button.getBoundingClientRect();
+    mask.hold = true;
+    mask.targetX = mask.x = rect.left + rect.width / 2;
+    mask.targetY = mask.y = rect.top + rect.height / 2;
+    const fullRadius = Math.hypot(Math.max(mask.x, innerWidth - mask.x), Math.max(mask.y, innerHeight - mask.y)) + 8;
     radiusTween.current = gsap.to(mask, {
-      radius: active ? Math.max(innerWidth, innerHeight) * 1.3 : 0,
-      duration: reduced ? 0 : active ? 0.8 : 0.45,
-      ease: "power3.out",
+      radius: stage === "charging" ? rect.width * 0.65 : fullRadius,
+      duration: reduced ? 0 : stage === "charging" ? 0.55 : 0.8,
+      ease: stage === "charging" ? "power1.inOut" : "power3.inOut",
+      onComplete: () => { if (stage === "revealed") setTouchReveal(true); },
     });
-  };
+  }, [reduced]);
   const toggleSound = async () => {
     try {
       if (!audioRef.current) {
@@ -1247,6 +1335,7 @@ export default function Portfolio() {
             onEnquiry={openEnquiry}
             openService={openService}
             onService={setOpenService}
+            journey={journeyRef}
           />
         </div>
         <div className="mask-layer" aria-hidden="true" inert>
@@ -1257,6 +1346,7 @@ export default function Portfolio() {
             onEnquiry={() => {}}
             openService={openService}
             onService={() => {}}
+            journey={journeyRef}
           />
         </div>
       </main>
@@ -1297,67 +1387,7 @@ export default function Portfolio() {
           </i>
         </button>
       </footer>
-      <button
-        className="touch-hold"
-        aria-label="Hold to reveal the alternate page"
-        aria-pressed={touchReveal}
-        onPointerDown={(e) => {
-          const target = e.currentTarget;
-          target.setPointerCapture(e.pointerId);
-          holdTimer.current = setTimeout(() => reveal(true, target), 500);
-        }}
-        onPointerUp={() => {
-          if (holdTimer.current) clearTimeout(holdTimer.current);
-          reveal(false);
-        }}
-        onLostPointerCapture={() => {
-          if (holdTimer.current) clearTimeout(holdTimer.current);
-          reveal(false);
-        }}
-        onBlur={() => {
-          if (holdTimer.current) clearTimeout(holdTimer.current);
-          reveal(false);
-        }}
-        onContextMenu={(e) => e.preventDefault()}
-        onPointerCancel={() => {
-          if (holdTimer.current) clearTimeout(holdTimer.current);
-          reveal(false);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === " " || e.key === "Enter") {
-            e.preventDefault();
-            reveal(true, e.currentTarget);
-          }
-        }}
-        onKeyUp={(e) => {
-          if (e.key === " " || e.key === "Enter") reveal(false);
-        }}
-        inert={!entered}
-      >
-        <svg className="hold-ring" viewBox="0 0 100 100" aria-hidden="true">
-          <defs>
-            <path
-              id="hold-circle"
-              d="M50 50m-38 0a38 38 0 1 1 76 0a38 38 0 1 1-76 0"
-            />
-          </defs>
-          <text>
-            <textPath href="#hold-circle">
-              HOLD TO REVEAL · HOLD TO REVEAL ·{" "}
-            </textPath>
-          </text>
-        </svg>
-        <svg className="hold-hand" viewBox="0 0 32 32" aria-hidden="true">
-          <path
-            d="M11 18V7a2 2 0 0 1 4 0v9-4a2 2 0 0 1 4 0v4-2a2 2 0 0 1 4 0v3-1a2 2 0 0 1 4 0v7c0 5-3 8-8 8-3 0-5-2-7-4l-6-6a2 2 0 0 1 3-3l3 3"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+      <HoldReveal enabled={entered && !enquiryOpen} onStageChange={changeHoldStage} />
       <Enquiry open={enquiryOpen} onClose={() => setEnquiryOpen(false)} />
     </div>
   );

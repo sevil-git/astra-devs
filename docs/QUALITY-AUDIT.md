@@ -149,3 +149,50 @@ Replaced the main headline and page/social titles with “Let’s build the good
 ### Distinct hero and matched reveal
 
 Replaced the hero with “From ‘what if’ to ‘holy shit.’” and paired its two lines with “Less blah blah. / More ta-da.” The contact invitation “Let’s build the good stuff.” stays at the bottom. Hero lines explicitly avoid wrapping. At 320px, both voices remain two lines, with matching per-line heights and identical total page geometry; all text remains within the phone viewport. Desktop and phone views inspected, TypeScript passed, and no qualifying Next.js feedback issues encountered.
+
+## Mobile hold reveal — October 17, 2026
+
+- Replaced the old delayed, bottom-left hold control with a bottom-centred SVG hand, orbiting instructions, a visible charge ring, press compression, and a soft halo. Safe-area spacing and compact hero controls prevent overlap, including at 320px.
+- The copper reveal grows from the actual button centre and uses the viewport's farthest-corner distance. It charges in 550ms, opens in 800ms, and returns in 600ms. Main and alternate text geometry remains aligned.
+- Pointer capture supports release outside the button. Short taps cancel; repeated keydown does not restart the hold. Blur, page hiding, pointer cancellation, viewport and pointer-mode changes, and modal opening all clear the gesture. Mask cleanup clears stale hold state when responsive effects rebuild.
+- Screen-reader click activation can toggle without a sustained gesture. Native Return-key hold/release and real pointer holds were verified. Optional 12ms haptic feedback runs only where the browser supports it.
+- Actual DOM event log: charging to reveal approximately 558ms, reveal to full-screen approximately 836ms; after release, the mask returned to 0px. A 120ms tap recorded charging → idle with no committed reveal. Dragging off the control returned idle/unpressed. Focus loss also closed an active reveal.
+- At 320px and 390px, no horizontal overflow; base and mirror heights match. At 320px, the 88px motion control ends at x104, the hold control begins at x114.5, and the scroll arrow begins at x227. The centred control is 80px. Reduced-motion branches and CSS were reviewed; device-level preferences and physical iOS/Android hardware were not exercised.
+- Final production build and TypeScript passed. ESLint: zero errors and the same two native-image advisories. Temporary reference/gesture instrumentation page removed; no production test controls or event logs are shipped. No qualifying Next.js feedback issues encountered.
+
+## Cinematic portal journey — October 17, 2026
+
+- Added a native sticky hero chapter driven by the existing GSAP/Lenis scroll pipeline. The headline clears, the near stone moves past the lens, a separate ocean plate opens behind the actual window aperture, and a brief scroll-controlled black cut precedes the studio section. Reversing scroll reverses the entire sequence. Navigation links can skip the journey.
+- This is a layered 2.5D reconstruction using original artwork, not a navigable 3D room. Desktop and mobile use independently authored SVG aperture mattes. The replacement sun is registered during the early dissolve to avoid a double image; the distant view then moves independently of the stone.
+- Desktop travel is 180svh; mobile travel is shortened to 135svh. Reduced motion removes the extended sticky chapter and WebGL motion. The original picture remains underneath WebGL and is the asset/context-failure fallback. Ambient pause continues to freeze water/time while intentional scroll can move the scene. All new textures are disposed on cleanup.
+- Both text layers share native sticky geometry, avoiding pin-spacer drift. Text reveal remains at the hero's resting position and returns on reverse scroll. The lens and hold control clear during travel; navigation remains available until the brief black cut. Faded controls become inert.
+- Browser review: full 1920 × 1080 desktop frame and 390 × 720 / 320 × 720 phone frames. Phone page heights match exactly; desktop differs by less than 0.01px. No horizontal overflow. Two hero lines in both voices at 320px. Reviewed aperture, open ocean, full black, following studio chapter, and reverse/home navigation. The checked phone error log is empty. Physical-device frame rates and OS reduced-motion settings were not measured; reduced-motion and failure paths were reviewed in source.
+- Final verification: production build and TypeScript passed; ESLint reports zero errors and the same two existing native-image advisories. Temporary review HTML removed. A native Return-key hold after returning home finished idle with a zero-radius mask. Desktop review error log is empty. Next.js feedback reporting pass: no qualifying framework issues retained.
+
+## Direct studio handoff — October 17, 2026
+
+The studio introduction now overlaps the end of the architectural journey. Its text fades into a vertically centred sticky reading stage while the ocean fades out, removing the former full black viewport and the extra scroll needed to bring the next section up from below. Further scrolling runs the original left-to-right line reveal in sequence on desktop and mobile, then releases the text into services. The alternate voice shares the same sticky geometry. Reduced motion retains a normal, fully visible introduction without the overlap or extra reading stage.
+
+Browser review at 1280 × 800, 390 × 720, and 320 × 720 confirms the introduction at viewport top 0, visible during the final scene fade, and sequential line clips progressing from unrevealed to fully revealed. Base and mirror heights match exactly; phone widths have no horizontal overflow. Corrected the studio anchor's CSS specificity so its negative scroll margin lands after the fade, on the centred visible introduction. Tested the actual studio link: intro top 0 and opacity 1. Checked desktop error log is empty. Temporary responsive review page removed.
+
+Final validation: production build and TypeScript passed; ESLint has zero errors and the same two native-image advisories. No qualifying Next.js feedback issues were retained in this request's reporting pass.
+
+## Stable hero entry framing — October 17, 2026
+
+Reproduced the sideways entry shift: at a 900px viewport, the scene host settled at 889px while its canvas retained a 929px inline display width. The renderer had sampled transformed bounds during the entrance zoom, and the tablet picture used a different crop from the shader. The shader also started 2.5% closer than the picture.
+
+The renderer now uses untransformed client dimensions and leaves display sizing to CSS. Entry fades without scaling the background. Picture and shader both use centred cover framing at every breakpoint, and the shader begins at scale 1 before its very small ambient drift. The scrollbar gutter is reserved during the intro, preserving the content width when Enter unlocks scrolling. The first render also receives the current scroll progress.
+
+Temporary browser instrumentation sampled actual DOM dimensions from approximately 290ms to 2.5s after Enter. At 900px, all post-fix host/canvas widths were 889px; at 390px they were 379px; at 1280px they were 1269px. No inline canvas display width remains; all image crops are 50% 50%. The body already had those same widths before entry. Desktop and phone compositions were visually checked; the checked browser error log is empty. Temporary entry-review HTML was removed.
+
+Final validation: production build and TypeScript passed. ESLint reports zero errors and the same two native-image advisories. The cinematic scroll still updates after the entry correction. This request's Next.js feedback reporting pass found no qualifying framework issues.
+
+## Decoded background fade — October 17, 2026
+
+The architectural picture is now prerendered and mounted behind the entry screen instead of first mounting after Enter. The preloader awaits image decoding. The scene separately confirms its displayed image is decoded and painted before permitting the entrance fade. WebGL prepares its first frame behind the entry screen; ambient time and pointer motion stay paused until entry. The picture remains the fallback when motion is reduced or WebGL fails.
+
+The old mount-time background animation is replaced by an Enter-triggered 1.6s opacity transition with an 80ms lead-in and a gentle ease. The animated canvas has a separate 1.2s dissolve over the already aligned still image. There are no background transforms in the fade. Reduced motion uses an immediate reveal.
+
+Browser checks at 1280 × 800 and 390 × 720 found the decoded image and prepared canvas behind the entry screen at opacity 0. After Enter, observed opacity progressed through approximately 0.014 at 200ms, 0.134 at 400ms, 0.435 at 600ms, 0.704 at 800ms, 0.938 at 1.2s, and 1 by 1.8s. Image/canvas widths stayed equal and transforms remained none. The checked browser error log is empty. These are local-browser measurements; physical-device performance and throttled remote networks were not measured. Temporary instrumentation removed.
+
+Final validation: production build and TypeScript passed. ESLint reports zero errors and the same two native-image advisories. The Next.js feedback reporting pass retained no qualifying framework issues.

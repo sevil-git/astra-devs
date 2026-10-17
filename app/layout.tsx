@@ -12,6 +12,8 @@ import "./motion-polish.css";
 import "./work-showcase.css";
 import "./architectural-scene.css";
 import "./studio-direction.css";
+import "./hold-reveal.css";
+import "./portal-journey.css";
 
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
