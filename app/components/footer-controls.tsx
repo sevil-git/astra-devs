@@ -83,7 +83,7 @@ export default function FooterControls({ entered, soundOn, onToggleSound }: {
               <circle cx="5" cy="4.5" r="1.4" fill="currentColor" stroke="none" />
             </svg>
           </Shortcut>
-          <Shortcut href="mailto:kalesahil565@gmail.com" label="Email Astra devs">
+          <Shortcut href="mailto:hello@astradevs.agency" label="Email Astra devs">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <rect x="3" y="5" width="18" height="14" rx="2" />
               <path d="m3 5 9 8 9-8" />

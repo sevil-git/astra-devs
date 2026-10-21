@@ -591,9 +591,9 @@ function PageLayer({
                 </span>
                 <a
                   className="contact-email"
-                  href="mailto:kalesahil565@gmail.com"
+                  href="mailto:hello@astradevs.agency"
                 >
-                  kalesahil565@gmail.com <Arrow diagonal />
+                  hello@astradevs.agency <Arrow diagonal />
                 </a>
               </div>
               <div>

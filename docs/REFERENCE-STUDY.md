@@ -44,7 +44,7 @@ Static analysis does not prove execution. Public bundles are minified; exact dep
 
 The hero now uses a local developer-workspace video from Mixkit with scroll parallax, playback controls, and a reduced-motion poster. The work introduction uses its poster; the closing eye is an original generated still. The reel features supplied project captures over original live Three.js artwork. Coffee, mouse, and globe geometry are original procedural substitutes for the reference's GLTF models. Urbanist is an openly licensed geometric substitute for its proprietary typeface. These visual assets are not pixel-identical.
 
-Agency content follows the confirmed offering: websites, apps, automations, and related software. Process rows replace personal career history; the supplied Zeltic, Maestera, and Nimbus projects replace concept entries; studio principles replace testimonials. The contact flow prepares a local project brief. The supplied address is kalesahil565@gmail.com; visitors can open a prepared email draft to this address, or copy/download their brief. There is no backend mail delivery.
+Agency content follows the confirmed offering: websites, apps, automations, and related software. Process rows replace personal career history; the supplied Zeltic, Maestera, and Nimbus projects replace concept entries; studio principles replace testimonials. The contact flow prepares a local project brief. The supplied address is hello@astradevs.agency; visitors can open a prepared email draft to this address, or copy/download their brief. There is no backend mail delivery.
 
 ## Accessibility and performance
 

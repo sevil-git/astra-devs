@@ -83,7 +83,7 @@ export default function Enquiry({
             <div className="brief-actions">
               <a
                 className="solid-button"
-                href={`mailto:kalesahil565@gmail.com?subject=${encodeURIComponent("A new project for Astra devs")}&body=${encodeURIComponent(brief)}`}
+                href={`mailto:hello@astradevs.agency?subject=${encodeURIComponent("A new project for Astra devs")}&body=${encodeURIComponent(brief)}`}
               >
                 EMAIL YOUR BRIEF ↗
               </a>
@@ -132,7 +132,7 @@ export default function Enquiry({
           <>
             <p className="enquiry-intro">
               Napkin sketches welcome. A 40-page deck is strictly optional.
-              We’ll help you prepare a brief to email to kalesahil565@gmail.com.
+              We’ll help you prepare a brief to email to hello@astradevs.agency.
             </p>
             <form
               onSubmit={(e) => {
@@ -213,7 +213,7 @@ export default function Enquiry({
               <p className="form-note">
                 Review your brief, then send it through your email app. Prefer a
                 quick hello?{" "}
-                <a href="mailto:kalesahil565@gmail.com">Email us directly.</a>
+                <a href="mailto:hello@astradevs.agency">Email us directly.</a>
               </p>
             </form>
           </>
